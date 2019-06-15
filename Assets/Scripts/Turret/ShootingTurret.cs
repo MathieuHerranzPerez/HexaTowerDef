@@ -9,6 +9,7 @@ public class ShootingTurret : Turret
     public LayerMask enemyMask;
 
     // ---- INTERN ----
+    protected int enemyLayer; 
     protected Transform target;
     protected Enemy targetEnemy;
     protected FocusStrategy focusStratey;
@@ -17,7 +18,8 @@ public class ShootingTurret : Turret
     protected override void Start()
     {
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
-        focusStratey = new FocusNearest(this);
+        focusStratey = new FocusVisibleNearest(this);
+        enemyLayer = Mathf.RoundToInt(Mathf.Log(enemyMask.value, 2));
     }
 
     protected override void UpdateCall()

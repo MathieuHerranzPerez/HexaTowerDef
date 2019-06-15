@@ -4,6 +4,7 @@ using UnityEngine;
 [Serializable]
 public class TurretStats
 {
+    public int cost;
     public float range = 15f;
     public float turnSpeed = 10f;
     [Header("Use Bullets (default)")]

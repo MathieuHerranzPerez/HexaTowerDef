@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FocusNearest : FocusStrategy
+public class FocusVisibleNearest : FocusStrategy
 {
-    public FocusNearest(ShootingTurret turret) : base(turret)
+    public FocusVisibleNearest(ShootingTurret turret) : base(turret)
     {
 
     }
