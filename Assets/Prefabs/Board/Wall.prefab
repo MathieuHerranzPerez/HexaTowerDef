@@ -124,7 +124,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turretSpawnPoint: {fileID: 7273599672049579774}
-  hoverColor: {r: 0.5512638, g: 0.7169812, b: 0.5635392, a: 0}
+  hoverColor: {r: 0.5943396, g: 0.5943396, b: 0.5943396, a: 1}
+  hoverCanPurchaseColor: {r: 0.6320754, g: 0.62993085, b: 0.5098344, a: 1}
+  turretGO: {fileID: 0}
 --- !u!64 &6003981290286685050
 MeshCollider:
   m_ObjectHideFlags: 0

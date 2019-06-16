@@ -822,6 +822,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stats:
+    cost: 100
     range: 15
     turnSpeed: 10
     fireRate: 1
@@ -833,6 +834,7 @@ MonoBehaviour:
   partToRotateY: {fileID: 7018469120845244305}
   partToRotateX: {fileID: 5743528094599393048}
   firePoint: {fileID: 7964262869645982680}
+  shopImg: {fileID: 21300000, guid: 7f69f6262fec29a43985f61b6f6935be, type: 3}
   fireSound: {fileID: 8300000, guid: 61c3e746e86ee9d4ab82111790b7e305, type: 3}
   volumeFire: 0.15
   enemyTag: EnemyWalker

@@ -12,6 +12,8 @@ public abstract class Turret : MonoBehaviour
     protected Transform partToRotateX = default;          // part of the turret to rotate
     [SerializeField]
     protected Transform firePoint = default;
+    [SerializeField]
+    protected Sprite shopImg = default;
 
     [Header("Sounds")]
     [SerializeField]
@@ -111,5 +113,10 @@ public abstract class Turret : MonoBehaviour
     void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(transform.position, stats.range);
+    }
+
+    public Sprite GetImg()
+    {
+        return shopImg;
     }
 }
