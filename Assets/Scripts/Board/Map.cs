@@ -139,7 +139,7 @@ public class Map : MonoBehaviour
     private bool ExpandSearchWalk(Tile from, Tile to)
     {
         // Skip if the tile is occupied by something
-        return (to.content == null);
+        return (to.content == null || to.content is EmptyTileElement);
     }
 
     private Tile GetNeighbour(Tile tile, Neighbour neighbour)

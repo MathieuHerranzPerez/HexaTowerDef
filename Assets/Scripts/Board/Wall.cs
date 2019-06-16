@@ -7,21 +7,22 @@ using UnityEngine.EventSystems;
 public class Wall : TileContent
 {
     public Transform turretSpawnPoint = default;
+
     [SerializeField]
-    private Color hoverColor = default;
+    protected Color hoverColor = default;
     [SerializeField]
-    private Color hoverCanPurchaseColor = default;
+    protected Color hoverCanPurchaseColor = default;
     
     [Header("Optional")]
     [SerializeField]
-    private GameObject turretGO = null;
+    protected GameObject turretGO = null;
 
     // ---- INTERN ----
-    private Turret turret;
-    private BuildManager buildManager;
+    protected Turret turret;
+    protected BuildManager buildManager;
 
-    private Renderer rend;
-    private Color startColor;
+    protected Renderer rend;
+    protected Color startColor;
 
 
     void Awake()
@@ -39,12 +40,12 @@ public class Wall : TileContent
         }
     }
 
-    void OnMouseEnter()
+    protected void OnMouseEnter()
     {
         if (EventSystem.current.IsPointerOverGameObject())
             return;
 
-        if (buildManager.CanBuild && buildManager.HasMoney())
+        if (AreConditionsOK() && buildManager.HasMoney())
         {
             rend.material.color = hoverCanPurchaseColor;
         }
@@ -54,9 +55,9 @@ public class Wall : TileContent
         }
     }
 
-    private void OnMouseDown()
+    protected void OnMouseDown()
     {
-        if(turretGO != null)
+        if (turretGO != null)
         {
             Debug.Log("Can't build turret here");
             return;
@@ -64,13 +65,18 @@ public class Wall : TileContent
 
         if (EventSystem.current.IsPointerOverGameObject())
             return;
-        if (!buildManager.CanBuild)
+        if (!AreConditionsOK())
             return;
 
         buildManager.BuildTurretOn(this);
     }
 
-    void OnMouseExit()
+    protected virtual bool AreConditionsOK()
+    {
+        return buildManager.CanBuild;
+    }
+
+    protected void OnMouseExit()
     {
         rend.material.color = startColor;
     }
