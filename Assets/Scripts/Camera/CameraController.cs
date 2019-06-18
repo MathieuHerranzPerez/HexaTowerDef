@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
     [SerializeField]
-    private CameraContainer cameraContainer;
+    private CameraContainer cameraContainer = default;
     [SerializeField]
     private float dampingRotation = 5.0f;
 

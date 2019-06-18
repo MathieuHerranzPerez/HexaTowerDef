@@ -5,11 +5,11 @@ public class ButtonShopTurret : MonoBehaviour
 {
     [Header("Setup")]
     [SerializeField]
-    private Image turretImg;
+    private Image turretImg = default;
     [SerializeField]
-    private Text priceText;
+    private Text priceText = default;
     [SerializeField]
-    private Button btn;
+    private Button btn = default;
 
     // ---- INTERN ----
     private GameObject turretPrefab;

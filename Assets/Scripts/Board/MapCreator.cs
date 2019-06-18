@@ -85,6 +85,81 @@ public class MapCreator : MonoBehaviour
         tileDictionary.Clear();
     }
 
+
+    public List<Tile> BuildCircle(Transform container)
+    {
+        CalculOffsets();
+        List<Tile> res = new List<Tile>();
+
+        for (int x = 0; x < 3; ++x)
+        {
+            //int logicPosY = x;
+            for (int z = 0; z < 3; ++z)
+            {
+                if ((!(x == 0) && !(z == 0)) || (!(x == 0) && !(z == 2)))
+                {
+                    float xPos = x * xOffset;
+                    if (z % 2 == 1)
+                    {
+                        xPos += xOffset / 2f;
+                        //++logicPosY;
+                    }
+                    int logicPosX = x + (int)(z * -0.5f);
+                    Point pos = new Point(logicPosX/*, logicPosY*/, z);
+
+
+                    GameObject tileCloneGO = Instantiate(hexagonePrefab, container);
+                    tileCloneGO.transform.localPosition = new Vector3(xPos, 0, z * zOffset);
+                    tileCloneGO.transform.localRotation = Quaternion.identity;
+
+                    Tile tileClone = tileCloneGO.GetComponent<Tile>();
+                    tileClone.pos = pos;
+
+                    tileCloneGO.name = "Tile-" + logicPosX /*+ "_" + logicPosY */+ "_" + z;
+
+                    res.Add(tileClone);
+                }
+            }
+        }
+        return res;
+    }
+
+    public List<Tile> BuildSquare(Transform container)
+    {
+        CalculOffsets();
+        List<Tile> res = new List<Tile>();
+
+        for (int x = 0; x < 2; ++x)
+        {
+            //int logicPosY = x;
+            for (int z = 0; z < 2; ++z)
+            {
+                float xPos = x * xOffset;
+                if (z % 2 == 1)
+                {
+                    xPos += xOffset / 2f;
+                    //++logicPosY;
+                }
+                int logicPosX = x + (int)(z * -0.5f);
+                Point pos = new Point(logicPosX/*, logicPosY*/, z);
+
+
+                GameObject tileCloneGO = Instantiate(hexagonePrefab, container);
+                tileCloneGO.transform.localPosition = new Vector3(xPos, 0, z * zOffset);
+                tileCloneGO.transform.localRotation = Quaternion.identity;
+
+                Tile tileClone = tileCloneGO.GetComponent<Tile>();
+                tileClone.pos = pos;
+
+                tileCloneGO.name = "Tile-" + logicPosX /*+ "_" + logicPosY */+ "_" + z;
+
+                res.Add(tileClone);
+            }
+        }
+        return res;
+    }
+
+
     /**
      * Set the x and z offsets to put the tiles correctly in world pos
      */

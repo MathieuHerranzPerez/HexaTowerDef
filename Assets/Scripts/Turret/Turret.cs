@@ -23,8 +23,11 @@ public abstract class Turret : MonoBehaviour
     protected float volumeFire = 0.5f;
 
 
+    public bool HasAnUpgrade { get { return stats.upgradedPrefab != null; } }
+
     // ---- INTERN ----
     protected AudioSource audioSource;
+    protected Wall wall;    // TODO
 
 
     protected virtual void Awake()
@@ -34,8 +37,26 @@ public abstract class Turret : MonoBehaviour
 
     protected virtual void Start()
     {
-        
+        if (stats.upgradedPrefab != null)
+        {
+            Turret turretUP = stats.upgradedPrefab.GetComponent<Turret>();
+            stats.fireRateUP = turretUP.stats.fireRate;
+            stats.rangeUP = turretUP.stats.range;
+
+            if (stats.useLaser)
+            {
+                stats.slowUP = turretUP.stats.slowPercent;
+                stats.damageUP = turretUP.stats.damageOverTime;
+            }
+            else
+            {
+                stats.slowUP = 0f;
+                stats.damageUP = turretUP.stats.bulletPrefab.GetComponent<Bullet>().Damage;
+            }
+        }
     }
+
+    public abstract int GetDamage();
 
     protected void Update()
     {
@@ -118,5 +139,20 @@ public abstract class Turret : MonoBehaviour
     public Sprite GetImg()
     {
         return shopImg;
+    }
+
+    public int GetSellAmount()
+    {
+        return (int)(stats.cost / 1.2f);
+    }
+
+    public void SetWall(Wall wall)
+    {
+        this.wall = wall;
+    }
+
+    private void OnMouseDown()
+    {
+        wall.OnMouseDown();
     }
 }

@@ -7,6 +7,7 @@ using UnityEngine.EventSystems;
 public class Wall : TileContent
 {
     public Transform turretSpawnPoint = default;
+    public Turret Turret { get { return turret; } }
 
     [SerializeField]
     protected Color hoverColor = default;
@@ -37,6 +38,7 @@ public class Wall : TileContent
         if(turretGO != null)
         {
             turret = turretGO.GetComponent<Turret>();
+            turret.SetWall(this);
         }
     }
 
@@ -45,7 +47,7 @@ public class Wall : TileContent
         if (EventSystem.current.IsPointerOverGameObject())
             return;
 
-        if (AreConditionsOK() && buildManager.HasMoney())
+        if (AreConditionsOK() && buildManager.HasMoney)
         {
             rend.material.color = hoverCanPurchaseColor;
         }
@@ -55,20 +57,23 @@ public class Wall : TileContent
         }
     }
 
-    protected void OnMouseDown()
+    public void OnMouseDown()
     {
-        if (turretGO != null)
-        {
-            Debug.Log("Can't build turret here");
-            return;
-        }
-
         if (EventSystem.current.IsPointerOverGameObject())
             return;
-        if (!AreConditionsOK())
-            return;
 
-        buildManager.BuildTurretOn(this);
+        if (turretGO != null)
+        {
+            buildManager.SelectWall(this);
+            return;
+        }
+        else
+        {
+            if (!AreConditionsOK())
+                return;
+
+            buildManager.BuildTurretOn(this);
+        }
     }
 
     protected virtual bool AreConditionsOK()
@@ -85,5 +90,58 @@ public class Wall : TileContent
     {
         this.turretGO = turretGO;
         turret = turretGO.GetComponent<Turret>();
+        turret.SetWall(this);
+
+        turretGO.transform.parent = transform;
+    }
+
+    public void SellTurret()
+    {
+        // give money to the user
+        PlayerStats.Money += turret.GetSellAmount();
+
+        // effect animation on delete
+        // GameObject effect = Instantiate(buildManager.sellEffect, GetBuildPosition(), Quaternion.identity);
+       //  Destroy(effect, 5f);
+
+        // destroy the turret
+        Destroy(turretGO);
+        turret = null;
+        turretGO = null;
+
+        //isUpgraded = false;
+    }
+
+    public void UpgradeTurret()
+    {
+        if (PlayerStats.Money < turret.stats.upgradeCost)
+        {
+            Debug.Log("Not enought money to upgrade it");
+        }
+        else
+        {
+            PlayerStats.Money -= turret.stats.upgradeCost;
+
+            // for the sell option
+            int tmpCost = this.turret.stats.upgradeCost;
+
+            // destroy the old turret
+            Destroy(this.turretGO);
+
+            // build the new turret
+            GameObject turretCloneGO = (GameObject)Instantiate(turret.stats.upgradedPrefab, turretSpawnPoint.position, Quaternion.identity);
+            SetTurretGO(turretCloneGO);
+
+            this.turretGO = turretCloneGO;
+            this.turret = turret.GetComponent<Turret>();
+            this.turret.stats.cost = tmpCost;
+            turret.GetComponent<Turret>().SetWall(this);
+
+            // effect animation on spawn
+            // GameObject effect = Instantiate(buildManager.buildEffect, GetBuildPosition(), Quaternion.identity);
+            // Destroy(effect, 5f);
+
+            //isUpgraded = true;
+        }
     }
 }

@@ -16,4 +16,16 @@ public class TurretStats
     public bool useLaser = false;
     public int damageOverTime = 30;
     public float slowPercent = 0.5f;
+
+    [Header("Upgrade")]
+    public int upgradeCost = 100;
+    public GameObject upgradedPrefab;
+    [HideInInspector]
+    public float fireRateUP;
+    [HideInInspector]
+    public float damageUP;
+    [HideInInspector]
+    public float rangeUP;
+    [HideInInspector]
+    public float slowUP;
 }

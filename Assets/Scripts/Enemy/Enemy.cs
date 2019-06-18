@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public string monsterName = "Basic Enemy";
     [Range(1f, 50f)]
     public float startSpeed = 10f;
     [HideInInspector]
@@ -11,8 +13,15 @@ public class Enemy : MonoBehaviour
 
     public float startHealth = 100f;
     private float health;
+
+    [Header("going to change")]
     public int worth = 50;
-    public bool isBoss = false;
+
+    [SerializeField]
+    private GameObject[] spawnWhenDieArray;
+
+    // ---- INTERN ----
+    private EnemySpawner enemySpawner;
 
     void Start()
     {
@@ -23,6 +32,11 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public void SetEnemySpawner(EnemySpawner enemySpawner)
+    {
+        this.enemySpawner = enemySpawner;
     }
 
     public void TakeDamage(float amount)
@@ -48,13 +62,59 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
+        PlayerStats.Money += worth;
+
+        if (spawnWhenDieArray != null)
+        {
+            foreach (GameObject go in spawnWhenDieArray)
+            {
+                GameObject gTmp = (GameObject)Instantiate(go, transform.position, Quaternion.identity);
+                // put it in the enemy container
+                gTmp.transform.parent = transform.parent;
+                // give it the next waypoint
+                EnemyMovement emChild = gTmp.GetComponent<EnemyMovement>();
+                emChild.SetTarget(this.GetComponent<EnemyMovement>().Target);
+                // and the enemySpawner
+                Enemy enemy = gTmp.GetComponent<Enemy>();
+                enemy.SetEnemySpawner(enemySpawner);
+            }
+        }
+
         // destroy the enemy
         Destroy(gameObject);
+    }
+
+    public void Explode()
+    {
+        // invoke explosion effect
+
+        PlayerStats.Lives -= GetNbEnemies();
+        Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        enemySpawner.NotifyDeath();
     }
 
     private void HitEffect(Vector3 pos, Vector3 normal)
     {
         //GameObject effect = Instantiate(hitEffect, pos, transform.rotation);
         //Destroy(effect, 2f);
+    }
+
+    public int GetNbEnemies()
+    {
+        int nbEnemies = 1;
+        if (spawnWhenDieArray.Length != 0)
+        {
+            foreach (GameObject goChild in spawnWhenDieArray)
+            {
+                Enemy child = goChild.GetComponent<Enemy>();
+                nbEnemies += child.GetNbEnemies();
+            }
+        }
+
+        return nbEnemies;
     }
 }

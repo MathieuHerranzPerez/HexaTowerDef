@@ -4,7 +4,7 @@ public class Shop : MonoBehaviour
 {
     [Header("Setup")]
     [SerializeField]
-    private GameObject[] listTurretPrefab;
+    private GameObject[] listTurretPrefab = new GameObject[1];
 
     [SerializeField]
     private GameObject buttonShopTurretPrefab = default;

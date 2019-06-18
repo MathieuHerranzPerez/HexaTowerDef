@@ -5,9 +5,10 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyMovement : MonoBehaviour
 {
+    public TargetPoint Target { get { return targetPoint; } }
 
     // ---- INTERN ----
-    private Transform targetWaypoint;
+    private TargetPoint targetPoint;
     private Enemy enemy;
     private NavMeshAgent agent;
 
@@ -17,9 +18,17 @@ public class EnemyMovement : MonoBehaviour
         enemy = GetComponent<Enemy>();
     }
 
-    public void SetTarget(Transform target)
+    void Update()
     {
-        targetWaypoint = target;
-        agent.SetDestination(target.position);
+        if(Vector3.Distance(transform.position, targetPoint.transform.position) <= targetPoint.GetRangeToExplose())
+        {
+            enemy.Explode();
+        }
+    }
+
+    public void SetTarget(TargetPoint target)
+    {
+        targetPoint = target;
+        agent.SetDestination(target.transform.position);
     }
 }

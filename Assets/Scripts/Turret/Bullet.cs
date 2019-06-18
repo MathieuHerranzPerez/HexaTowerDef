@@ -2,6 +2,8 @@
 
 public class Bullet : MonoBehaviour
 {
+    public int Damage { get { return damage; } }
+
     [SerializeField]
     private float speed = 70f;
     [SerializeField]
@@ -72,7 +74,7 @@ public class Bullet : MonoBehaviour
         }
         else
         {
-            Damage(target);
+            MakeDamage(target);
         }
 
         if (soundWhenTuch != null)
@@ -87,7 +89,7 @@ public class Bullet : MonoBehaviour
         Destroy(gameObject);
     }
 
-    private void Damage(Transform enemyGameObject)
+    private void MakeDamage(Transform enemyGameObject)
     {
         Enemy enemy = enemyGameObject.GetComponent<Enemy>();
 
@@ -105,7 +107,7 @@ public class Bullet : MonoBehaviour
         {
             if (collider.tag == "Enemy")
             {
-                Damage(collider.transform);
+                MakeDamage(collider.transform);
             }
         }
     }

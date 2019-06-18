@@ -8,6 +8,12 @@ public class BuildManager : MonoBehaviour
 
     public GameObject turretToBuildPrefab { get; private set; }
     public bool CanBuild { get { return turretToBuildPrefab != null; } }
+    public bool HasMoney { get { return PlayerStats.Money >= turretToBuildPrefab.GetComponent<Turret>().stats.cost; } }
+
+    [SerializeField]
+    private TurretUI turretUI = default;
+    // ---- INTERN ----
+    private Wall selectedWall;
 
     void Awake()
     {
@@ -18,31 +24,37 @@ public class BuildManager : MonoBehaviour
         Instance = this;
     }
 
-    public void SetWall(Wall wall)
-    {
-        // todo
-    }
-
-
     public void SetTurretToBuild(GameObject turretToBuild)
     {
         this.turretToBuildPrefab = turretToBuild;
+
+        DeselectWall();
     }
 
-    // check if we have enought money to build the selected turret
-    public bool HasMoney()
+    public void SelectWall(Wall wall)
     {
-        return PlayerStats.Money >= turretToBuildPrefab.GetComponent<Turret>().stats.cost;
+        if(selectedWall == wall)
+        {
+            DeselectWall();
+        }
+        else
+        {
+            selectedWall = wall;
+            turretToBuildPrefab = null;
+
+            turretUI.SetTarget(wall);
+        }
     }
 
     public void DeselectWall()
     {
-        // todo
+        selectedWall = null;
+        turretUI.Hide();
     }
 
     public void BuildTurretOn(Wall wall)
     {
-        if (HasMoney())
+        if (HasMoney)
         {
             PlayerStats.Money -= turretToBuildPrefab.GetComponent<Turret>().stats.cost;
 

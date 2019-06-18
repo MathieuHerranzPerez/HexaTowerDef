@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 1001075976866604850}
   - component: {fileID: 1001075976866604851}
   - component: {fileID: 1001075976866604849}
+  - component: {fileID: 1010030692}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -45,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51c68eaeb1fb4ae47913aef813cba297, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startMoney: 0
+  startMoney: 400
   startLives: 1000
 --- !u!114 &1001075976866604849
 MonoBehaviour:
@@ -68,7 +69,7 @@ MonoBehaviour:
   minPosXZ: -15
   maxPosXZ: 80
   minHeight: 2
-  maxHeight: 20
+  maxHeight: 40
   desiredPosition: {x: 0, y: 0, z: 0}
   targetRotation: {x: 0, y: 0, z: 0, w: 0}
   curve:
@@ -77,20 +78,20 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: 0.23680232
-      outSlope: 0.23680232
+      inSlope: 0.33154383
+      outSlope: 0.33154383
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.65078515
+      outWeight: 0.30471796
     - serializedVersion: 3
-      time: 4.3050237
-      value: 5.3601294
-      inSlope: 2.9315271
+      time: 5.0788274
+      value: 4.4479437
+      inSlope: 1.5353963
       outSlope: 0.18946016
       tangentMode: 1
       weightedMode: 0
-      inWeight: 0.10517037
+      inWeight: 0.120473124
       outWeight: 0.2475527
     - serializedVersion: 3
       time: 18.03746
@@ -102,26 +103,30 @@ MonoBehaviour:
       inWeight: 0.16589947
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 18.514008
-      value: 8.8235855
+      time: 18.57132
+      value: 9.000572
       inSlope: 0.48407897
       outSlope: 0.007903387
       tangentMode: 1
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.15321635
-    - serializedVersion: 3
-      time: 26.415516
-      value: 8.980181
-      inSlope: 0.019818397
-      outSlope: 0.019818397
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1010030692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1001075976866604876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 941504502442fd2488d666e67a1e911e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 1001075977350397184}
 --- !u!1 &1001075977350397186
 GameObject:
   m_ObjectHideFlags: 0

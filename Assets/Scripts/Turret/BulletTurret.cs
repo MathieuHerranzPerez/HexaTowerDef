@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BulletTurret : ShootingTurret
 {
@@ -47,5 +45,10 @@ public class BulletTurret : ShootingTurret
         {
             bullet.SetTarget(target);
         }
+    }
+
+    public override int GetDamage()
+    {
+        return stats.bulletPrefab.GetComponent<Bullet>().Damage;
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShootingTurret : Turret
+public abstract class ShootingTurret : Turret
 {
     [Header("Setup")]
     public string enemyTag = "EnemyWalker";       // target type
