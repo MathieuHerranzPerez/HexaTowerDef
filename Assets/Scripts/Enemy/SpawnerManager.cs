@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SpawnerManager : MonoBehaviour
 {
+    public TargetPoint EnemyTarget { get { return enemyGoal; } }
+
     [SerializeField]
     private AnimationCurve priceSingleEnemyByRoundCurve;
     [SerializeField]
@@ -39,7 +41,6 @@ public class SpawnerManager : MonoBehaviour
         int i = 0;
         foreach(GameObject enemyGO in listEnemyPrefab)
         {
-            Debug.Log("Enemy : " + enemyGO.GetComponent<Enemy>());
             listEnemy[i] = enemyGO.GetComponent<Enemy>();
             ++i;
         }
@@ -63,21 +64,25 @@ public class SpawnerManager : MonoBehaviour
         }
     }
 
+    public List<Tile> GetListTileOfSpawners()
+    {
+        List<Tile> res = new List<Tile>();
+        foreach(EnemySpawner es in listEnemySpawner)
+        {
+            res.Add(es.tile);
+        }
+        return res;
+    }
+
     public void NotifySpawnerDown()
     {
         --nbSpawnerActive;
     }
 
-    public void AddSpawner(GameObject spawner)
+    public void AddSpawner(EnemySpawner spawner)
     {
-        EnemySpawner enemySpawner = spawner.GetComponent<EnemySpawner>();
-        listEnemySpawner.Add(enemySpawner);
-
-        //Vector3 pos = spawner.transform.position;
-        spawner.transform.parent = transform;
-        //spawner.transform.position = pos;
-
-        enemySpawner.Init(enemyGoal, this, enemyContainer);
+        listEnemySpawner.Add(spawner);
+        spawner.Init(enemyGoal, this, enemyContainer);
     }
 
     public void Spawn()

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4803862390314535679}
   - component: {fileID: 6916532217895825137}
   - component: {fileID: 5631991869431986199}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: SolidWall
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1caac4e2a85c8814bb8f8b5675b146b0, type: 2}
+  - {fileID: 2100000, guid: 0335983837dd6184a84932545394fcb0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

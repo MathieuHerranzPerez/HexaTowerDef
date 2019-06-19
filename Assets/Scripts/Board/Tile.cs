@@ -13,6 +13,16 @@ public class Tile : MonoBehaviour
 
     public Renderer rend;
 
+    public bool isWet = false;
+
+    // ---- INTERN ----
+    private Color defaultColor;
+
+    void Start()
+    {
+        defaultColor = rend.material.color;
+    }
+
     /**
      * Return true if the parameter tile can be LOGICALY considered as a neighbor
      */
@@ -38,5 +48,15 @@ public class Tile : MonoBehaviour
     public void ChangeColor(float c)
     {
         rend.material.color = new Color(c, 0f, 0f);
+    }
+
+    public void ChangeColorToBlue()
+    {
+        rend.material.color = Color.blue;
+    }
+
+    public void ResetColor()
+    {
+        rend.material.color = defaultColor;
     }
 }

@@ -34,6 +34,16 @@ public class CameraContainer : MonoBehaviour
 
     public AnimationCurve curve;
 
+    [SerializeField]
+    private Transform cameraTopPosition = default;
+
+    // ---- INTERN ----
+    private Vector3 previousPos;
+    private Quaternion previousRotation;
+    private bool isZoomActive = true;
+    private bool isGoingToTop = false;
+    private bool isGoingToPrevious = false;
+
     void Awake()
     {
         Init();
@@ -41,75 +51,99 @@ public class CameraContainer : MonoBehaviour
 
     void Update()
     {
+        if (!isGoingToTop && !isGoingToPrevious)
+            desiredPosition = transform.position;
+        else
+        {
+            if(isGoingToPrevious && Vector3.Distance(transform.position, previousPos) <= 0.5f)
+            {
+                isGoingToPrevious = false;
+            }
+            else if(isGoingToTop && Vector3.Distance(transform.position, cameraTopPosition.position) <= 0.5f)
+            {
+                isGoingToTop = false;
+            }
+        }
 
         // translation
-        desiredPosition = transform.position;
-        if (transform.position.x >= minPosXZ && transform.position.x <= maxPosXZ && transform.position.z >= minPosXZ && transform.position.z <= maxPosXZ)
+        if (!isGoingToTop && !isGoingToPrevious)
         {
-            desiredPosition += transform.right * (Input.GetAxis("Horizontal") * cameraSpeed) + (new Vector3(transform.up.x, 0, transform.up.z) * (Input.GetAxis("Vertical") * cameraSpeed));
-        }
-
-
-        if (transform.position.y >= minHeight && transform.position.y <= maxHeight)
-        {
-
-            if (transform.position.x >= minPosXZ + 1 && transform.position.x <= maxPosXZ - 1 && transform.position.z >= minPosXZ + 1 && transform.position.z <= maxPosXZ - 1)
+            if (transform.position.x >= minPosXZ && transform.position.x <= maxPosXZ && transform.position.z >= minPosXZ && transform.position.z <= maxPosXZ)
             {
-                desiredPosition += (transform.forward * Input.GetAxis("Mouse ScrollWheel") * cameraMouseScroll);
+                desiredPosition += transform.right * (Input.GetAxis("Horizontal") * cameraSpeed) + (new Vector3(transform.up.x, 0, transform.up.z) * (Input.GetAxis("Vertical") * cameraSpeed));
             }
-            else
-            {
-                desiredPosition += (new Vector3(0, transform.forward.y, 0) * Input.GetAxis("Mouse ScrollWheel") * cameraMouseScroll);
-            }
-            // check heigh
-            if (desiredPosition.y < minHeight)
-            {
-                desiredPosition.y = minHeight;
-            }
-            else if (desiredPosition.y > maxHeight)
-            {
-                desiredPosition.y = maxHeight;
-            }
-        }
 
-        if (desiredPosition.x < minPosXZ)
-        {
-            desiredPosition.x = minPosXZ + 0.5f; ;
-        }
-        if (desiredPosition.x > maxPosXZ)
-        {
-            desiredPosition.x = maxPosXZ - 0.5f; ;
-        }
-        if (desiredPosition.z < minPosXZ)
-        {
-            desiredPosition.z = minPosXZ + 0.5f;
-        }
-        if (desiredPosition.z > maxPosXZ)
-        {
-            desiredPosition.z = maxPosXZ - 0.5f;
-        }
+            if (isZoomActive)
+            {
+                if (transform.position.y >= minHeight && transform.position.y <= maxHeight)
+                {
 
+                    if (transform.position.x >= minPosXZ + 1 && transform.position.x <= maxPosXZ - 1 && transform.position.z >= minPosXZ + 1 && transform.position.z <= maxPosXZ - 1)
+                    {
+                        desiredPosition += (transform.forward * Input.GetAxis("Mouse ScrollWheel") * cameraMouseScroll);
+                    }
+                    else
+                    {
+                        desiredPosition += (new Vector3(0, transform.forward.y, 0) * Input.GetAxis("Mouse ScrollWheel") * cameraMouseScroll);
+                    }
+                    // check heigh
+                    if (desiredPosition.y < minHeight)
+                    {
+                        desiredPosition.y = minHeight;
+                    }
+                    else if (desiredPosition.y > maxHeight)
+                    {
+                        desiredPosition.y = maxHeight;
+                    }
+                }
+            }
+
+            if (desiredPosition.x < minPosXZ)
+            {
+                desiredPosition.x = minPosXZ + 0.5f; ;
+            }
+            if (desiredPosition.x > maxPosXZ)
+            {
+                desiredPosition.x = maxPosXZ - 0.5f; ;
+            }
+            if (desiredPosition.z < minPosXZ)
+            {
+                desiredPosition.z = minPosXZ + 0.5f;
+            }
+            if (desiredPosition.z > maxPosXZ)
+            {
+                desiredPosition.z = maxPosXZ - 0.5f;
+            }
+        }
         transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref moveVelocity, dampTime);
 
 
-
-        // rotation
-        float rotY = targetRotation.eulerAngles.y;
-
-        if (Input.GetKeyDown(inputLeftCameraRot))
-        //if (Input.GetButtonDown("RotLeft"))
+        if (!isGoingToTop && !isGoingToPrevious)
         {
-            rotY = targetRotation.eulerAngles.y - 45;
-        }
-        if (Input.GetKeyDown(inputRightCameraRot))
-        //if (Input.GetButtonDown("RotRight"))
-        {
-            rotY = targetRotation.eulerAngles.y + 45;
+            // rotation
+            float rotY = targetRotation.eulerAngles.y;
+
+            if (isZoomActive)
+            {
+                if (Input.GetKeyDown(inputLeftCameraRot))
+                //if (Input.GetButtonDown("RotLeft"))
+                {
+                    rotY = targetRotation.eulerAngles.y - (360 / 6);
+                }
+                if (Input.GetKeyDown(inputRightCameraRot))
+                //if (Input.GetButtonDown("RotRight"))
+                {
+                    rotY = targetRotation.eulerAngles.y + (360 / 6);
+                }
+            }
+            targetRotation = Quaternion.Euler(transform.eulerAngles.x, rotY, transform.eulerAngles.z);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * dampingRotation);
         }
 
-        targetRotation = Quaternion.Euler(transform.eulerAngles.x, rotY, transform.eulerAngles.z);
 
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * dampingRotation);
+
+
+
 
 
         // DEBUG PART
@@ -118,7 +152,7 @@ public class CameraContainer : MonoBehaviour
         Debug.DrawRay(transform.position, transform.up * 10, Color.blue);
     }
 
-
+    /*
     public void ResetCameraAtPos(Vector3 pos)
     {
         transform.position = new Vector3(pos.x, transform.position.y < 7.5 ? 7.5f : transform.position.y, pos.z - 7.5f);
@@ -131,6 +165,38 @@ public class CameraContainer : MonoBehaviour
     {
         transform.position = new Vector3(0, 10, -5.0f);
         targetRotation = Quaternion.Euler(60f, 0f, 0f);
+    }*/
+
+    public void GoTopCenter()
+    {
+        // disable the zoom
+        //isZoomActive = false;
+
+        isGoingToTop = true;
+
+        //Camera.main.orthographic = true;
+        //Camera.main.orthographicSize = 15;
+
+        // store the current pos and rotation
+        previousPos = transform.position;
+        previousRotation = transform.rotation;
+
+        desiredPosition = cameraTopPosition.position;
+        targetRotation = Quaternion.Euler(90, 0, 0);
+    }
+
+    public void ReturnToPrevious()
+    {
+        // enable the zoom
+        //isZoomActive = true;
+
+        isGoingToPrevious = true;
+
+        //Camera.main.orthographic = false;
+
+        // store the current pos and rotation
+        desiredPosition = previousPos;
+        targetRotation = previousRotation;
     }
 
     private void Init()

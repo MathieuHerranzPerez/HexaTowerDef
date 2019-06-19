@@ -86,7 +86,7 @@ public class MapCreator : MonoBehaviour
     }
 
 
-    public List<Tile> BuildCircle(Transform container)
+    public List<Tile> BuildCircle(Transform container, out Tile center)
     {
         CalculOffsets();
         List<Tile> res = new List<Tile>();
@@ -96,7 +96,7 @@ public class MapCreator : MonoBehaviour
             //int logicPosY = x;
             for (int z = 0; z < 3; ++z)
             {
-                if ((!(x == 0) && !(z == 0)) || (!(x == 0) && !(z == 2)))
+                if (!((x == 0) && (z == 0)) && !((x == 0) && (z == 2)))
                 {
                     float xPos = x * xOffset;
                     if (z % 2 == 1)
@@ -121,10 +121,14 @@ public class MapCreator : MonoBehaviour
                 }
             }
         }
+
+        CenterTiles(res, 2);
+        center = res[2];
+
         return res;
     }
 
-    public List<Tile> BuildSquare(Transform container)
+    public List<Tile> BuildSquare(Transform container, out Tile center)
     {
         CalculOffsets();
         List<Tile> res = new List<Tile>();
@@ -156,9 +160,22 @@ public class MapCreator : MonoBehaviour
                 res.Add(tileClone);
             }
         }
+
+        CenterTiles(res, 2);
+        center = res[2];
+
         return res;
     }
 
+
+    private void CenterTiles(List<Tile> listTile, int index)
+    {
+        Vector3 offset = Vector3.zero - listTile[index].transform.localPosition;
+        foreach(Tile t in listTile)
+        {
+            t.transform.localPosition += new Vector3(offset.x, 0f, offset.z);
+        }
+    }
 
     /**
      * Set the x and z offsets to put the tiles correctly in world pos

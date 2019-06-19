@@ -26,7 +26,7 @@ public class Map : MonoBehaviour
         if(Input.GetButtonDown("Fire1"))
         {
             Point p1 = new Point(0, 0);
-            Point p2 = new Point(13, 21);
+            Point p2 = new Point(9, 27);
             GetShortestPath(tilesDictionary[p1], tilesDictionary[p2]);
         }
     }
@@ -36,6 +36,91 @@ public class Map : MonoBehaviour
         surface.BuildNavMesh();
     }
 
+    public Tile GetTileAtPos(Point pos)
+    {
+        return tilesDictionary.ContainsKey(pos) ? tilesDictionary[pos] : null;
+    }
+
+    /**
+     * the tiles listTileToBuild need to fit the coordinate
+     * return true if built
+     */ 
+    public bool TryToBuild(List<Tile> listTileToBuild, List<Tile> listSpawn, Tile tileNeededToBeReashable)
+    {
+        bool res = true;
+
+        // check if can build walls
+        foreach(Tile t in listTileToBuild)
+        {
+            if(!tilesDictionary.ContainsKey(t.pos) || (tilesDictionary[t.pos].content != null && t.content != null))
+            {
+                res = false;
+            }
+        }
+
+        if(res)
+        {
+            // temporary build the walls
+            List<Tile> listTileToUndoChange = new List<Tile>();
+            foreach(Tile t in listTileToBuild)
+            {
+                Tile currentTile = tilesDictionary[t.pos];
+                listTileToUndoChange.Add(currentTile);
+                currentTile.content = t.content;
+            }
+
+            // check if tileNeededToBeReashable is reashable by listSpawn tiles
+            res = AreTilesReashableFrom(listSpawn, tileNeededToBeReashable);
+
+            // if not, cancel changes
+            if (!res)
+            {
+                foreach (Tile t in listTileToUndoChange)
+                {
+                    t.content = null;
+                }
+            }
+            else
+            {
+                // if we can, change the transform and the position of the walls
+                for (int i = 0; i < listTileToBuild.Count; ++i)
+                {
+                    if(listTileToBuild[i].content != null)
+                    {
+                        listTileToUndoChange[i].content.transform.parent = listTileToUndoChange[i].transform;
+                        listTileToUndoChange[i].content.transform.position = listTileToUndoChange[i].center;
+                    }
+                }/*
+                foreach (Tile t in listTileToUndoChange)
+                {
+                    t.content.transform.parent = t.transform;
+                    t.content.transform.position = t.center;
+                }*/
+            }
+        }
+       
+        return res;
+    }
+
+    public Tile GetTileAtWorldPos(Transform pos)
+    {
+        Tile res = null;
+        RaycastHit[] hits = Physics.RaycastAll(pos.transform.position, pos.TransformDirection(-Vector3.up), Mathf.Infinity, LayerMask.GetMask("MapComponent"));
+        if (hits.Length > 0)
+        {
+            foreach (RaycastHit hit in hits)
+            {
+                Tile t = hit.transform.GetComponent<Tile>();
+                if (t != null)
+                {
+                    res = t;
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
 
     private void BuildDictionary()
     {
@@ -53,11 +138,22 @@ public class Map : MonoBehaviour
      * ------------------------------------ 
      */
 
-    private bool IsThereAPath(Tile from, Tile to)
+    private bool AreTilesReashableFrom(List<Tile> listTileToReach, Tile startPosTile)
     {
-        Search(from, ExpandSearchWalk);
+        LaunchWave(startPosTile);
 
-        return to.prev != null;
+        bool res = true;
+        int i = 0;
+        while (res && i < listTileToReach.Count)
+        {
+            if (!listTileToReach[i].isWet)
+                res = false;
+            ++i;
+        }
+
+        DryAll();
+
+        return res;
     }
 
     private Stack<Tile> GetShortestPath(Tile from, Tile to)
@@ -121,6 +217,36 @@ public class Map : MonoBehaviour
         return retValue;
     }
 
+    private void LaunchWave(Tile from)
+    {
+        Queue<Tile> queue = new Queue<Tile>();
+        queue.Enqueue(from);
+
+        while(queue.Count > 0)
+        {
+            Tile currentTile = queue.Dequeue();
+            foreach(Neighbour n in (Neighbour[]) Enum.GetValues(typeof(Neighbour)))
+            {
+                Tile neighbourTile = GetNeighbour(currentTile, n);
+                if (neighbourTile != null && !neighbourTile.isWet &&
+                    (neighbourTile.content == null || neighbourTile.content is WalkableTileContent))
+                {
+                    neighbourTile.ChangeColorToBlue(); // todo remove
+                    neighbourTile.isWet = true;
+                    queue.Enqueue(neighbourTile);
+                }
+            }
+        }
+    }
+
+    private void DryAll()
+    {
+        foreach(Tile t in tilesDictionary.Values)
+        {
+            t.isWet = false;
+        }
+    }
+
     private void SwapReference(ref Queue<Tile> a, ref Queue<Tile> b)
     {
         Queue<Tile> temp = a;
@@ -139,7 +265,7 @@ public class Map : MonoBehaviour
     private bool ExpandSearchWalk(Tile from, Tile to)
     {
         // Skip if the tile is occupied by something
-        return (to.content == null || to.content is EmptyTileElement);
+        return (to.content == null || to.content is WalkableTileContent);
     }
 
     private Tile GetNeighbour(Tile tile, Neighbour neighbour)

@@ -10,6 +10,10 @@ public class GameManager : MonoBehaviour
     [Header("Setup")]
     [SerializeField]
     private SpawnerManager spawnerManager = default;
+    [SerializeField]
+    private BuildingMapManager buildingMapManager = default;
+
+    // ---- ITERN ----
 
     void Awake()
     {
@@ -21,19 +25,21 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(StartSpawn());
+        // spawnerManager.Spawn();
     }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            buildingMapManager.StartPhase(0);
+        }
+    }
+
 
     public void NotifyEndWave(int waveNum)
     {
         Debug.Log("Wave end ! " + waveNum); // todo
         spawnerManager.Spawn();
-    }
-
-
-    private IEnumerator StartSpawn()
-    {
-        yield return new WaitForSeconds(0.5f);
-        spawnerManager.Spawn(); // todo
     }
 }

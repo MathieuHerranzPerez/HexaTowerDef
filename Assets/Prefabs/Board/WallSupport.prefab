@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 6460260108746487896}
   - component: {fileID: 764482996022412449}
   - component: {fileID: 9131796888693562692}
-  m_Layer: 0
+  - component: {fileID: -3873008235531030030}
+  m_Layer: 9
   m_Name: WallSupport
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8b0f6e9967f09034981fb9817ba2d0d5, type: 2}
+  - {fileID: 2100000, guid: 25a852fbb53804f4f8dba0fc3506aeba, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -95,6 +96,20 @@ MonoBehaviour:
   hoverColor: {r: 0.59607846, g: 0.59607846, b: 0.59607846, a: 0}
   hoverCanPurchaseColor: {r: 0.6313726, g: 0.6313726, b: 0.50980395, a: 0}
   turretGO: {fileID: 0}
+--- !u!64 &-3873008235531030030
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1344090501957824637}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 2534964839176971238, guid: 7c123797df677dd48b170d9108244813, type: 3}
 --- !u!1 &8686698853415394804
 GameObject:
   m_ObjectHideFlags: 0
@@ -104,7 +119,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8018756120765258340}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TurretSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 3443629218296621865, guid: 0000000000000000d000000000000000, type: 0}
