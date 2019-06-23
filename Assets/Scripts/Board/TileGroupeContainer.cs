@@ -49,6 +49,10 @@ public class TileGroupeContainer : MonoBehaviour
                     Destroy(emptyGO);
 
                     Debug.Log("Success ? : " + isBuiltASuccess);
+                    if(isBuiltASuccess)
+                    {
+                        tileGroup.NotifyBuilt();
+                    }
                 }
             }
 

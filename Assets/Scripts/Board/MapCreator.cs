@@ -167,6 +167,23 @@ public class MapCreator : MonoBehaviour
         return res;
     }
 
+    public Tile BuildTile(Transform container)
+    {
+        Point pos = new Point(0, 0);
+        GameObject tileCloneGO = Instantiate(hexagonePrefab, container);
+        tileCloneGO.transform.localPosition = new Vector3(0, 0, 0);
+        tileCloneGO.transform.localRotation = Quaternion.identity;
+
+        Tile tileClone = tileCloneGO.GetComponent<Tile>();
+        tileClone.pos = pos;
+
+        List<Tile> listTile = new List<Tile>();
+        listTile.Add(tileClone);
+        CenterTiles(listTile, 0);
+
+        return tileClone;
+    }
+
 
     private void CenterTiles(List<Tile> listTile, int index)
     {

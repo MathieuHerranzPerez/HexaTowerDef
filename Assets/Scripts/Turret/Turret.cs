@@ -27,7 +27,7 @@ public abstract class Turret : MonoBehaviour
 
     // ---- INTERN ----
     protected AudioSource audioSource;
-    protected Wall wall;    // TODO
+    protected Wall wall;
 
 
     protected virtual void Awake()
@@ -149,6 +149,11 @@ public abstract class Turret : MonoBehaviour
     public void SetWall(Wall wall)
     {
         this.wall = wall;
+    }
+
+    public void DisplayRange()
+    {
+        // todo
     }
 
     private void OnMouseDown()

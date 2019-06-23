@@ -13,22 +13,23 @@ public class Map : MonoBehaviour
 
     // ---- INTERN ----
     private Dictionary<Point, Tile> tilesDictionary = new Dictionary<Point, Tile>();
+    private Dictionary<Point, Tile> emptyTileDictionary = new Dictionary<Point, Tile>();
 
-    void Start()
+    private void Awake()
     {
         BuildDictionary();
 
         NotifyUpdateWall();
     }
 
-    private void Update()
+    void Start()
     {
-        if(Input.GetButtonDown("Fire1"))
-        {
-            Point p1 = new Point(0, 0);
-            Point p2 = new Point(9, 27);
-            GetShortestPath(tilesDictionary[p1], tilesDictionary[p2]);
-        }
+        
+    }
+
+    void Update()
+    {
+
     }
 
     public void NotifyUpdateWall()
@@ -41,64 +42,93 @@ public class Map : MonoBehaviour
         return tilesDictionary.ContainsKey(pos) ? tilesDictionary[pos] : null;
     }
 
-    /**
-     * the tiles listTileToBuild need to fit the coordinate
-     * return true if built
-     */ 
-    public bool TryToBuild(List<Tile> listTileToBuild, List<Tile> listSpawn, Tile tileNeededToBeReashable)
+    public bool TryToBuild(List<Tile> listTileToBuild, List<Tile> listSpawn, Tile tileNeededToBeReashable, bool isThereASpawner)
     {
-        bool res = true;
+        return CanBuild(listTileToBuild, listSpawn, tileNeededToBeReashable, true, isThereASpawner);
+    }
 
-        // check if can build walls
-        foreach(Tile t in listTileToBuild)
+    public bool IsThereAReashablePlaceFrom(Tile tileNeededToBeReashable)
+    {
+        bool res = false;
+        List<Tile> listToCheck = new List<Tile>(emptyTileDictionary.Values);
+
+        LaunchWave(tileNeededToBeReashable);
+
+        int i = 0;
+        while(i < listToCheck.Count && !res)
         {
-            if(!tilesDictionary.ContainsKey(t.pos) || (tilesDictionary[t.pos].content != null && t.content != null))
-            {
-                res = false;
-            }
+            if (listToCheck[i].isWet)
+                res = true;
+            ++i;
         }
 
-        if(res)
+        DryAll();
+
+        return res;
+    }
+
+    public bool IsThereAPlaceFor(GameObject tileContainer, List<Tile> listTileToBuild, List<Tile> listSpawn, Tile tileNeededToBeReashable, bool isThereASpawner)
+    {
+        Vector3 startPos = tileContainer.transform.position;
+        Quaternion startRot = tileContainer.transform.rotation;
+
+        List<Tile> listToCheck = new List<Tile>(emptyTileDictionary.Values);
+
+        int i = 0;
+        bool res = false;
+        while(i < listToCheck.Count && !res)
         {
-            // temporary build the walls
-            List<Tile> listTileToUndoChange = new List<Tile>();
-            foreach(Tile t in listTileToBuild)
+            List<Tile> listTileToCheck = new List<Tile>();
+            listTileToCheck.Add(listToCheck[i]);
+            // add the tiles to check around the current
+            foreach (Neighbour neighbour in (Neighbour[])Enum.GetValues(typeof(Neighbour)))
             {
-                Tile currentTile = tilesDictionary[t.pos];
-                listTileToUndoChange.Add(currentTile);
-                currentTile.content = t.content;
-            }
-
-            // check if tileNeededToBeReashable is reashable by listSpawn tiles
-            res = AreTilesReashableFrom(listSpawn, tileNeededToBeReashable);
-
-            // if not, cancel changes
-            if (!res)
-            {
-                foreach (Tile t in listTileToUndoChange)
+                // check if we already have checked it
+                Tile t = GetNeighbour(listToCheck[i], neighbour);
+                if (t != null && !t.isVisited)
                 {
-                    t.content = null;
+                    listTileToCheck.Add(t);
+                    t.isVisited = true;
                 }
             }
-            else
+
+            for(int j = 0; j < listTileToCheck.Count && !res; ++j)
             {
-                // if we can, change the transform and the position of the walls
-                for (int i = 0; i < listTileToBuild.Count; ++i)
+                tileContainer.transform.position = new Vector3(listTileToCheck[j].gameObject.transform.position.x, 0.2f, listTileToCheck[j].gameObject.transform.position.z);
+                // 6 rotations
+                for (int k = 0; k < 6 && !res; ++k)
                 {
-                    if(listTileToBuild[i].content != null)
+                    tileContainer.transform.Rotate(new Vector3(0f, (float)(k * (360f / 6f)), 0f));
+                    foreach (Tile tile in listTileToBuild)
                     {
-                        listTileToUndoChange[i].content.transform.parent = listTileToUndoChange[i].transform;
-                        listTileToUndoChange[i].content.transform.position = listTileToUndoChange[i].center;
+                        Tile tmp = GetTileAtWorldPos(tile.transform);
+                        if (tmp == null)
+                            break;
+
+                        tile.pos = tmp.pos;
                     }
-                }/*
-                foreach (Tile t in listTileToUndoChange)
-                {
-                    t.content.transform.parent = t.transform;
-                    t.content.transform.position = t.center;
-                }*/
+
+                    if (CanBuild(listTileToBuild, listSpawn, tileNeededToBeReashable, false, isThereASpawner))
+                    {
+                        foreach (Tile tile in listTileToBuild)     // affD
+                        {
+                            Debug.Log("CAN BUILD HERE : " + tile.pos);
+                        }
+                        res = true;
+                    }
+                }
+
+                // undo rotation
+                tileContainer.transform.rotation = startRot;
+                // undo translation
+                tileContainer.transform.position = startPos;
             }
+
+            ++i;
         }
-       
+
+        UnvisiteAll();
+
         return res;
     }
 
@@ -122,13 +152,87 @@ public class Map : MonoBehaviour
         return res;
     }
 
+    /**
+     * the tiles listTileToBuild need to fit the coordinate
+     * return true if built
+     */
+    private bool CanBuild(List<Tile> listTileToBuild, List<Tile> listSpawn, Tile tileNeededToBeReashable, bool needToBuild, bool isThereASpawner)
+    {
+        bool res = true;
+
+        // check if can build walls
+        foreach (Tile t in listTileToBuild)
+        {
+            if (!tilesDictionary.ContainsKey(t.pos) || (tilesDictionary[t.pos].content != null && t.content != null))
+            {
+                res = false;
+            }
+        }
+
+        if (res)
+        {
+            // temporary build the walls
+            List<Tile> listTileToUndoChange = new List<Tile>();
+            foreach (Tile t in listTileToBuild)
+            {
+                Tile currentTile = tilesDictionary[t.pos];
+                listTileToUndoChange.Add(currentTile);
+                currentTile.content = t.content;
+                
+                if (isThereASpawner && t.content != null)
+                {
+                    EnemySpawner es = t.content.GetComponent<EnemySpawner>();
+                    if(es != null)
+                    {
+                        listSpawn.Add(currentTile);
+                    }
+                }
+            }
+
+            // check if tileNeededToBeReashable is reashable by listSpawn tiles
+            res = AreTilesReashableFrom(listSpawn, tileNeededToBeReashable);
+            // if not, cancel changes
+            if (!res || !needToBuild)
+            {
+                foreach (Tile t in listTileToUndoChange)
+                {
+                    t.content = null;
+                }
+            }
+            else
+            {
+                // if we can, change the transform and the position of the walls
+                for (int i = 0; i < listTileToBuild.Count; ++i)
+                {
+                    if (listTileToBuild[i].content != null)
+                    {
+                        listTileToUndoChange[i].content.transform.parent = listTileToUndoChange[i].transform;
+                        listTileToUndoChange[i].content.transform.position = listTileToUndoChange[i].center;
+
+                        // remove the tiles with a content from the emptyTileDictionary
+                        emptyTileDictionary.Remove(listTileToUndoChange[i].pos);
+                    }
+                }
+            }
+        }
+
+        return res;
+    }
+
     private void BuildDictionary()
     {
         tilesDictionary.Clear();
         foreach(Transform tileChild in tilesContainer)
         {
             Tile t = tileChild.gameObject.GetComponent<Tile>();
-            tilesDictionary.Add(t.pos, t);
+            if (t != null)
+            {
+                tilesDictionary.Add(t.pos, t);
+                if (t.content == null)
+                {
+                    emptyTileDictionary.Add(t.pos, t);
+                }
+            }
         }
     }
 
@@ -201,9 +305,6 @@ public class Map : MonoBehaviour
                         next.distance = tile.distance + 1;
                         next.prev = tile;
 
-                        // todo remove
-                        next.ChangeColor(0.02f * (float)next.distance);
-
                         checkNext.Enqueue(next);
                         retValue.Add(next);
                     }
@@ -231,7 +332,7 @@ public class Map : MonoBehaviour
                 if (neighbourTile != null && !neighbourTile.isWet &&
                     (neighbourTile.content == null || neighbourTile.content is WalkableTileContent))
                 {
-                    neighbourTile.ChangeColorToBlue(); // todo remove
+                    //neighbourTile.ChangeColorToBlue(); // todo remove
                     neighbourTile.isWet = true;
                     queue.Enqueue(neighbourTile);
                 }
@@ -244,6 +345,14 @@ public class Map : MonoBehaviour
         foreach(Tile t in tilesDictionary.Values)
         {
             t.isWet = false;
+        }
+    }
+
+    private void UnvisiteAll()
+    {
+        foreach(Tile t in tilesDictionary.Values)
+        {
+            t.isVisited = false;
         }
     }
 

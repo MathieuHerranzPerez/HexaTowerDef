@@ -29,32 +29,30 @@ public class BuildingMapManager : MonoBehaviour
     {
         currentWave = numWave;
         cameraContainer.GoTopCenter();
-        tileGroup.GenerateCircle(needToPopASpawner(numWave));
+        List<Tile> lsitTilesBuilt = tileGroup.GenerateCircle(NeedToPopASpawner(numWave));
+
+        CheckIfCanBuild(lsitTilesBuilt);
     }
 
-    public bool TryToBuild(List<Tile> listTileToBuild)
+    public bool TryToBuild(List<Tile> listTileToBuild)      /// TODO SPAWNER !
     {
         // get all the spawn point and the targetPoint
         List<Tile> listEnemySpawnerTile = spawnerManager.GetListTileOfSpawners();
+
         EnemySpawner es = null;
-        if (needToPopASpawner(currentWave))
+        if (NeedToPopASpawner(currentWave))
         {
             // search the new spawner
             int i = 0;
-            while(es == null && i < listTileToBuild.Count)
+            while (es == null && i < listTileToBuild.Count)
             {
-                if(listTileToBuild[i].content != null)
+                if (listTileToBuild[i].content != null)
                     es = listTileToBuild[i].content.GetComponent<EnemySpawner>();
                 ++i;
             }
-
-            if(es != null)
-            {
-                listEnemySpawnerTile.Add(map.GetTileAtPos(es.tile.pos));
-            }
         }
 
-        bool res = map.TryToBuild(listTileToBuild, listEnemySpawnerTile, spawnerManager.EnemyTarget.tile);
+        bool res = map.TryToBuild(listTileToBuild, listEnemySpawnerTile, spawnerManager.EnemyTarget.tile, NeedToPopASpawner(currentWave));
 
         if(res && es != null)
         {
@@ -70,12 +68,33 @@ public class BuildingMapManager : MonoBehaviour
         return map.GetTileAtWorldPos(pos);
     }
 
+    public void NotifyBuilt()
+    {
+        EndPhase();
+    }
+
     private void EndPhase()
     {
         cameraContainer.ReturnToPrevious();
     }
 
-    private bool needToPopASpawner(int numWave)
+    private void CheckIfCanBuild(List<Tile> listTileToBuild)
+    {
+        // get all the spawn point and the targetPoint
+        List<Tile> listEnemySpawnerTile = spawnerManager.GetListTileOfSpawners();
+
+        for (int i = 0; i < listEnemySpawnerTile.Count; ++i)
+        {
+            Debug.Log("spanwer : " + listEnemySpawnerTile[i]); // affD
+        }
+
+        if(!map.IsThereAPlaceFor(tileGroup.Container, listTileToBuild, listEnemySpawnerTile, spawnerManager.EnemyTarget.tile, NeedToPopASpawner(currentWave)))
+        {
+            GameManager.Instance.EndByWin();
+        }
+    }
+
+    private bool NeedToPopASpawner(int numWave)
     {
         return numWave % waveToGetASpawn == 0;
     }

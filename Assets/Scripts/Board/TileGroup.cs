@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TileGroup : MonoBehaviour
 {
+    public GameObject Container { get { return tileContainer.gameObject; } }
+
     [SerializeField]
     [Range(0f, 1f)]
     private float wallPopChance = 0.5f;
@@ -47,20 +49,24 @@ public class TileGroup : MonoBehaviour
         this.buildingMapManager = buildingMapManager;
     }
 
-    public void GenerateSquare(bool withSpawn)
+    public List<Tile> GenerateSquare(bool withSpawn)
     {
         Clear();
         listTile = mapCreator.BuildSquare(tileContainer.transform, out currentCenter);
 
         BuildWalls(listTile, withSpawn);
+
+        return listTile;
     }
 
-    public void GenerateCircle(bool withSpawn)
+    public List<Tile> GenerateCircle(bool withSpawn)
     {
         Clear();
         listTile = mapCreator.BuildCircle(tileContainer.transform, out currentCenter);
 
         BuildWalls(listTile, withSpawn);
+
+        return listTile;
     }
 
     public bool TryToBuild(Transform worldPos, int nbRotationLeft)
@@ -89,25 +95,35 @@ public class TileGroup : MonoBehaviour
         return buildingMapManager.TryToBuild(listTile);
     }
 
+    public void NotifyBuilt()
+    {
+        Clear();
+        buildingMapManager.NotifyBuilt();
+    }
+
     private void BuildWalls(List<Tile> listTile, bool withSpawn)
     {
-        if(withSpawn)
+        int randomIndex = Random.Range(0, listTile.Count);
+        // to be sure that the spawn is reashable
+        if (listTile.Count > 6)
         {
-            int randomIndex = Random.Range(0, listTile.Count);
-            int i = 0;
-            foreach (Tile t in listTile)
+            while (currentCenter.pos == listTile[randomIndex].pos)
+                randomIndex = Random.Range(0, listTile.Count);
+        }
+
+        int i = 0;
+        foreach (Tile t in listTile)
+        {
+            if (withSpawn && i == randomIndex)
             {
-                if (withSpawn && i == randomIndex)
-                {
-                    BuildSpawn(t);
-                }
-                else
-                {
-                    BuildRandomOnTile(t);
-                }
-                ++i;
-                ChangeLayer(t.gameObject);
+                BuildSpawn(t);
             }
+            else
+            {
+                BuildRandomOnTile(t);
+            }
+            ++i;
+            ChangeLayer(t.gameObject);
         }
 
         tileContainer.Activate();
@@ -119,7 +135,7 @@ public class TileGroup : MonoBehaviour
         listTile = new List<Tile>();
         foreach (Transform child in tileContainer.transform)
         {
-            Destroy(child);
+            Destroy(child.gameObject);
         }
 
         tileContainer.transform.position = tileContainerDefaultPos.position;
@@ -174,8 +190,6 @@ public class TileGroup : MonoBehaviour
         EnemySpawner es = spawnGO.GetComponent<EnemySpawner>();
         t.content = es;
         es.tile = t;
-
-        // tod register the spawn
     }
 
     private void ChangeLayer(GameObject go)

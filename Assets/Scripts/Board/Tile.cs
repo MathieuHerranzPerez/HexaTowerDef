@@ -14,6 +14,7 @@ public class Tile : MonoBehaviour
     public Renderer rend;
 
     public bool isWet = false;
+    public bool isVisited = false;
 
     // ---- INTERN ----
     private Color defaultColor;

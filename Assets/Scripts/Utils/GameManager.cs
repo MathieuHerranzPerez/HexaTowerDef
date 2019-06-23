@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     private BuildingMapManager buildingMapManager = default;
 
     // ---- ITERN ----
+    private int numWave = 0;
 
     void Awake()
     {
@@ -25,15 +26,12 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // spawnerManager.Spawn();
+        buildingMapManager.StartPhase(numWave);
     }
 
-    private void Update()
+    void Update()
     {
-        if(Input.GetKeyDown(KeyCode.B))
-        {
-            buildingMapManager.StartPhase(0);
-        }
+
     }
 
 
@@ -41,5 +39,11 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Wave end ! " + waveNum); // todo
         spawnerManager.Spawn();
+    }
+
+    public void EndByWin()
+    {
+        Debug.Log("WIIIIN !");
+        // todo
     }
 }

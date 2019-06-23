@@ -106,11 +106,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bef51d9dacf50e24990dee66f436bf5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  monsterName: Basic Enemy
   startSpeed: 10
   speed: 0
   startHealth: 100000
   worth: 50
-  isBoss: 0
+  spawnWhenDieArray: []
 --- !u!114 &7235765786422572190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -133,7 +134,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 3.5
+  m_Speed: 1
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
