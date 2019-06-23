@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -29,16 +27,15 @@ public class GameManager : MonoBehaviour
         buildingMapManager.StartPhase(numWave);
     }
 
-    void Update()
+    public void NotifyBuilt()
     {
-
+        spawnerManager.SetReadyToSpawn();
     }
 
-
-    public void NotifyEndWave(int waveNum)
+    public void NotifyEndWave()
     {
-        Debug.Log("Wave end ! " + waveNum); // todo
-        spawnerManager.Spawn();
+        ++numWave;
+        buildingMapManager.StartPhase(numWave);
     }
 
     public void EndByWin()

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SpawnerManager : MonoBehaviour
 {
@@ -14,7 +15,12 @@ public class SpawnerManager : MonoBehaviour
     [SerializeField]
     private List<GameObject> listEnemyPrefab = new List<GameObject>();
 
+    [SerializeField]
+    private float timeToBuild = 60f;
+
     [Header("Setup")]
+    [SerializeField]
+    private Text waveCountdownText = default;
     [SerializeField]
     private Transform enemyContainer = default;
     [SerializeField]
@@ -30,6 +36,8 @@ public class SpawnerManager : MonoBehaviour
     private int nbSpawnerActive = 0;
 
     private int waveNum = 0;
+    private float countdown;
+    private bool needToSpawn = false;
 
 
     void Start()
@@ -49,6 +57,8 @@ public class SpawnerManager : MonoBehaviour
         {
             es.Init(enemyGoal, this, enemyContainer);
         }
+
+        countdown = timeToBuild;
     }
 
     void Update()
@@ -58,8 +68,31 @@ public class SpawnerManager : MonoBehaviour
             if (nbSpawnerActive <= 0 && enemyContainer.childCount == 0)
             {
                 areEnemiesDead = true;
-                gameManager.NotifyEndWave(waveNum);
+                gameManager.NotifyEndWave();
                 ++waveNum;
+            }
+        }
+        else if(needToSpawn)
+        {
+            if (countdown <= 0f)
+            {
+                Spawn();
+                countdown = timeToBuild;
+                needToSpawn = false;
+            }
+            else
+            {
+                // if the player cancel the countdown
+                if (Input.GetKeyDown(KeyCode.P))
+                {
+                    countdown = Mathf.Min(1f, countdown);
+                }
+                else
+                {
+                    countdown -= Time.deltaTime;
+                    countdown = Mathf.Clamp(countdown, 0f, Mathf.Infinity);
+                }
+                waveCountdownText.text = string.Format("{0:00.0}", countdown);      // update the countdown UI text
             }
         }
     }
@@ -74,6 +107,11 @@ public class SpawnerManager : MonoBehaviour
         return res;
     }
 
+    public void SetReadyToSpawn()
+    {
+        needToSpawn = true;
+    }
+
     public void NotifySpawnerDown()
     {
         --nbSpawnerActive;
@@ -85,7 +123,7 @@ public class SpawnerManager : MonoBehaviour
         spawner.Init(enemyGoal, this, enemyContainer);
     }
 
-    public void Spawn()
+    private void Spawn()
     {
         Debug.Log("Sapwn");
         areEnemiesDead = false;
@@ -93,7 +131,7 @@ public class SpawnerManager : MonoBehaviour
         {
             // build an order
             List<EnemyOrder> listOrder = new List<EnemyOrder>();
-            int nbEnemyToSpawn = (int) nbEnemySingleSpawnByRoundCurve.Evaluate(waveNum) + 40;
+            int nbEnemyToSpawn = (int) nbEnemySingleSpawnByRoundCurve.Evaluate(waveNum);
             int nbCurrentEnemy = 0;
              
             Dictionary<GameObject, int> enemySelectedDico = new Dictionary<GameObject, int>();

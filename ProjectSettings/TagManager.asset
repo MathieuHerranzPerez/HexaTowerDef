@@ -19,8 +19,8 @@ TagManager:
   - Enemy
   - MapComponent
   - BuildingMapComponent
-  - 
-  - 
+  - Turret
+  - Bullet
   - 
   - 
   - 

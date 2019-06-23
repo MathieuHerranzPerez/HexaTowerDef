@@ -76,6 +76,7 @@ public class BuildingMapManager : MonoBehaviour
     private void EndPhase()
     {
         cameraContainer.ReturnToPrevious();
+        GameManager.Instance.NotifyBuilt();
     }
 
     private void CheckIfCanBuild(List<Tile> listTileToBuild)

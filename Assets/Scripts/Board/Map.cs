@@ -173,11 +173,15 @@ public class Map : MonoBehaviour
         {
             // temporary build the walls
             List<Tile> listTileToUndoChange = new List<Tile>();
+            List<TileContent> listTileContent = new List<TileContent>();
             foreach (Tile t in listTileToBuild)
             {
                 Tile currentTile = tilesDictionary[t.pos];
                 listTileToUndoChange.Add(currentTile);
-                currentTile.content = t.content;
+                listTileContent.Add(currentTile.content);
+
+                if(currentTile.content == null)
+                    currentTile.content = t.content;
                 
                 if (isThereASpawner && t.content != null)
                 {
@@ -194,9 +198,9 @@ public class Map : MonoBehaviour
             // if not, cancel changes
             if (!res || !needToBuild)
             {
-                foreach (Tile t in listTileToUndoChange)
+                for(int i = 0; i < listTileToUndoChange.Count; ++i)
                 {
-                    t.content = null;
+                    listTileToUndoChange[i].content = listTileContent[i];
                 }
             }
             else
@@ -213,6 +217,9 @@ public class Map : MonoBehaviour
                         emptyTileDictionary.Remove(listTileToUndoChange[i].pos);
                     }
                 }
+
+                // rebuld the NavMesh
+                surface.BuildNavMesh();
             }
         }
 
@@ -320,6 +327,7 @@ public class Map : MonoBehaviour
 
     private void LaunchWave(Tile from)
     {
+        DryAll();
         Queue<Tile> queue = new Queue<Tile>();
         queue.Enqueue(from);
 
@@ -332,7 +340,7 @@ public class Map : MonoBehaviour
                 if (neighbourTile != null && !neighbourTile.isWet &&
                     (neighbourTile.content == null || neighbourTile.content is WalkableTileContent))
                 {
-                    //neighbourTile.ChangeColorToBlue(); // todo remove
+                    neighbourTile.ChangeColorToBlue(); // todo remove
                     neighbourTile.isWet = true;
                     queue.Enqueue(neighbourTile);
                 }

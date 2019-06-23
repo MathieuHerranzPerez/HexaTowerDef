@@ -109,8 +109,8 @@ MonoBehaviour:
   monsterName: Basic Enemy
   startSpeed: 10
   speed: 0
-  startHealth: 100000
-  worth: 50
+  startHealth: 150
+  worth: 40
   spawnWhenDieArray: []
 --- !u!114 &7235765786422572190
 MonoBehaviour:

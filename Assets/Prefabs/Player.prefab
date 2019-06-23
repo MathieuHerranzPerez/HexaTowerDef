@@ -64,10 +64,10 @@ MonoBehaviour:
   inputRightCameraRot: 101
   dampTime: 0.2
   dampingRotation: 5
-  cameraSpeed: 2.5
-  cameraMouseScroll: 50
-  minPosXZ: -15
-  maxPosXZ: 80
+  cameraSpeed: 2
+  cameraMouseScroll: 25
+  minPosXZ: -40
+  maxPosXZ: 40
   minHeight: 2
   maxHeight: 40
   desiredPosition: {x: 0, y: 0, z: 0}
@@ -78,21 +78,21 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: 0.33154383
-      outSlope: 0.33154383
+      inSlope: 0.14007601
+      outSlope: 0.14007601
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.30471796
+      outWeight: 0.23037975
     - serializedVersion: 3
-      time: 5.0788274
-      value: 4.4479437
-      inSlope: 1.5353963
-      outSlope: 0.18946016
+      time: 8.244385
+      value: 4.5999823
+      inSlope: 1.1771293
+      outSlope: 0.39878154
       tangentMode: 1
       weightedMode: 0
-      inWeight: 0.120473124
-      outWeight: 0.2475527
+      inWeight: 0.08701357
+      outWeight: 0.1925263
     - serializedVersion: 3
       time: 18.03746
       value: 6.9905205
@@ -114,6 +114,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  cameraTopPosition: {fileID: 0}
 --- !u!114 &1010030692
 MonoBehaviour:
   m_ObjectHideFlags: 0
