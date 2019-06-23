@@ -18,7 +18,7 @@ public class Enemy : MonoBehaviour
     public int worth = 50;
 
     [SerializeField]
-    private GameObject[] spawnWhenDieArray;
+    private GameObject[] spawnWhenDieArray = new GameObject[0];
 
     // ---- INTERN ----
     private EnemySpawner enemySpawner;

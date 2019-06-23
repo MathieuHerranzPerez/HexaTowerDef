@@ -31,10 +31,10 @@ public class EnemySpawner : WalkableTileContent
         this.enemyContainer = enemyContainer;
     }
 
-    public void Spawn(List<EnemyOrder> listToSpawn, int nbEnemies)
+    public void Spawn(List<EnemyOrder> listToSpawn, int nbEnemies, float percentageGoldEarnt)
     {
         nbEnemyAlive = nbEnemies;
-        StartCoroutine(SpawnWithDelay(listToSpawn));
+        StartCoroutine(SpawnWithDelay(listToSpawn, percentageGoldEarnt));
         isActive = true;
     }
 
@@ -43,7 +43,7 @@ public class EnemySpawner : WalkableTileContent
         --nbEnemyAlive;
     }
 
-    private IEnumerator SpawnWithDelay(List<EnemyOrder> listToSpawn)
+    private IEnumerator SpawnWithDelay(List<EnemyOrder> listToSpawn, float percentageGoldEarnt)
     {
         // foreach (EnemyOrder enemyOrder in listToSpawn)
         // {
@@ -70,6 +70,7 @@ public class EnemySpawner : WalkableTileContent
             enemyMovementClone.SetTarget(target);
             Enemy enemyClone = enemyCloneGO.GetComponent<Enemy>();
             enemyClone.SetEnemySpawner(this);
+            enemyClone.worth = (int) ((enemyClone.worth * percentageGoldEarnt) / 100);
 
             --listToSpawn[index].nbEnemyToSpawn;
             if(listToSpawn[index].nbEnemyToSpawn == 0)

@@ -31,13 +31,6 @@ public class Bullet : MonoBehaviour
         this.target = target;
     }
 
-    // Use this for initialization
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
     void Update()
     {
         if (target == null)
@@ -105,7 +98,7 @@ public class Bullet : MonoBehaviour
         Collider[] colliderHitObjectArray = Physics.OverlapSphere(transform.position, explosionRadius);
         foreach (Collider collider in colliderHitObjectArray)
         {
-            if (collider.tag == "Enemy")
+            if (collider.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             {
                 MakeDamage(collider.transform);
             }

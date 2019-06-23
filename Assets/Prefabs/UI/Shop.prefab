@@ -90,6 +90,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   listTurretPrefab:
   - {fileID: 6020563107458777502, guid: 688bb3d417947a9468b522a68bc52fb1, type: 3}
+  - {fileID: 8757431270202150401, guid: 7bdbf2258feb19f42a33a18215711ad4, type: 3}
   buttonShopTurretPrefab: {fileID: 5055798344224703201, guid: 6594e8f0dc5a3094196d051aa33c6919,
     type: 3}
 --- !u!114 &1239049637093072436

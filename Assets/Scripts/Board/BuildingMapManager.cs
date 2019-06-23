@@ -5,7 +5,9 @@ using UnityEngine;
 public class BuildingMapManager : MonoBehaviour
 {
     [SerializeField]
-    private int waveToGetASpawn = 9;
+    private int waveToGetASpawn = 4;
+    [SerializeField]
+    private int nbBuildingToSpawnPerWave = 2;
 
     [Header("Setup")]
     [SerializeField]
@@ -19,6 +21,7 @@ public class BuildingMapManager : MonoBehaviour
 
     // ---- INTERN ----
     private int currentWave = 0;
+    private int nbBuildingBuilt = 0;
 
     void Start()
     {
@@ -28,10 +31,10 @@ public class BuildingMapManager : MonoBehaviour
     public void StartPhase(int numWave)
     {
         currentWave = numWave;
-        cameraContainer.GoTopCenter();
-        List<Tile> lsitTilesBuilt = tileGroup.GenerateCircle(NeedToPopASpawner(numWave));
+        //cameraContainer.GoTopCenter();
+        List<Tile> listTilesBuilt = tileGroup.GenerateCircle(NeedToPopASpawner(numWave));
 
-        CheckIfCanBuild(lsitTilesBuilt);
+        CheckIfCanBuild(listTilesBuilt);
     }
 
     public bool TryToBuild(List<Tile> listTileToBuild)      /// TODO SPAWNER !
@@ -70,12 +73,33 @@ public class BuildingMapManager : MonoBehaviour
 
     public void NotifyBuilt()
     {
-        EndPhase();
+        ++nbBuildingBuilt;
+
+        if (nbBuildingBuilt == nbBuildingToSpawnPerWave)
+        {
+            nbBuildingBuilt = 0;
+            EndPhase();
+        }
+        else
+        {
+            if (nbBuildingBuilt % 2 == 0)
+            {
+                List<Tile> listTilesBuilt = tileGroup.GenerateCircle(false);
+
+                CheckIfCanBuild(listTilesBuilt);
+            }
+            else
+            {
+                List<Tile> listTilesBuilt = tileGroup.GenerateSquare(false);
+
+                CheckIfCanBuild(listTilesBuilt);
+            }
+        }
     }
 
     private void EndPhase()
     {
-        cameraContainer.ReturnToPrevious();
+        //cameraContainer.ReturnToPrevious();
         GameManager.Instance.NotifyBuilt();
     }
 

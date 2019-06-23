@@ -159,7 +159,7 @@ public class SpawnerManager : MonoBehaviour
                 listOrder.Add(new EnemyOrder(enemyGO, enemySelectedDico[enemyGO]));
             }
 
-            enemySpawner.Spawn(listOrder, nbEnemyToSpawn);
+            enemySpawner.Spawn(listOrder, nbEnemyToSpawn, priceSingleEnemyByRoundCurve.Evaluate(waveNum));
         }
     }
 

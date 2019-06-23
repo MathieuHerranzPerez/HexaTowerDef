@@ -78,11 +78,14 @@ public class TurretUI : MonoBehaviour
             upgradeCostText.text = "";
             btnUpgradeTurret.DesactiveButton();
         }
+
+        TurretRangeDisplayer.Instance.DisplayRange(target.Turret);
     }
 
     public void Hide()
     {
         CanvasUIGO.SetActive(false);
+        TurretRangeDisplayer.Instance.HideRange();
     }
 
     public void Sell()
