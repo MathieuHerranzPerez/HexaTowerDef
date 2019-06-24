@@ -12,6 +12,8 @@ public class EnemyMovement : MonoBehaviour
     private Enemy enemy;
     private NavMeshAgent agent;
 
+    private float previousSpeed;
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -24,6 +26,8 @@ public class EnemyMovement : MonoBehaviour
         {
             enemy.Explode();
         }
+
+        agent.speed = enemy.speed;
     }
 
     public void SetTarget(TargetPoint target)

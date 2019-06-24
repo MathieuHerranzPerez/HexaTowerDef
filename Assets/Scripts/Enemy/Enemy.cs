@@ -5,9 +5,11 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public float Health { get { return health; } }
+
     public string monsterName = "Basic Enemy";
-    [Range(1f, 50f)]
-    public float startSpeed = 10f;
+    [Range(0.05f, 5f)]
+    public float startSpeed = 1f;
     [HideInInspector]
     public float speed;
 
@@ -29,9 +31,9 @@ public class Enemy : MonoBehaviour
         health = startHealth;
     }
 
-    void Update()
+    void LateUpdate()
     {
-        
+        speed = startSpeed;
     }
 
     public void SetEnemySpawner(EnemySpawner enemySpawner)

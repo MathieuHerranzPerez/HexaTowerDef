@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FocusVisibleNearest : FocusStrategy
 {
@@ -30,5 +28,10 @@ public class FocusVisibleNearest : FocusStrategy
         }
 
         return enemyToFocus;
+    }
+
+    public override Strategy GetStrat()
+    {
+        return Strategy.Nearest;
     }
 }

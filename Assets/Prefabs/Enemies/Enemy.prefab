@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   monsterName: Basic Enemy
-  startSpeed: 10
+  startSpeed: 1
   speed: 0
   startHealth: 150
   worth: 40

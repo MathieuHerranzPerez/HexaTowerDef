@@ -340,7 +340,7 @@ public class Map : MonoBehaviour
                 if (neighbourTile != null && !neighbourTile.isWet &&
                     (neighbourTile.content == null || neighbourTile.content is WalkableTileContent))
                 {
-                    neighbourTile.ChangeColorToBlue(); // todo remove
+                    //neighbourTile.ChangeColorToBlue(); // todo remove
                     neighbourTile.isWet = true;
                     queue.Enqueue(neighbourTile);
                 }

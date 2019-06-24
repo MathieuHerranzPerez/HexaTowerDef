@@ -8,9 +8,9 @@ public class SpawnerManager : MonoBehaviour
     public TargetPoint EnemyTarget { get { return enemyGoal; } }
 
     [SerializeField]
-    private AnimationCurve priceSingleEnemyByRoundCurve;
+    private AnimationCurve priceSingleEnemyByRoundCurve = default;
     [SerializeField]
-    private AnimationCurve nbEnemySingleSpawnByRoundCurve;
+    private AnimationCurve nbEnemySingleSpawnByRoundCurve = default;
 
     [SerializeField]
     private List<GameObject> listEnemyPrefab = new List<GameObject>();

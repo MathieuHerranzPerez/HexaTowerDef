@@ -4,6 +4,8 @@ using UnityEngine;
 
 public abstract class ShootingTurret : Turret
 {
+    public Strategy Strat { get { return focusStratey.GetStrat() ; } }
+
     [Header("Setup")]
     public string enemyTag = "EnemyWalker";       // target type
     public LayerMask enemyMask;
@@ -28,6 +30,11 @@ public abstract class ShootingTurret : Turret
         {
             LockOnTarget();
         }
+    }
+
+    public void ChangeStrategy(FocusStrategy focusStratey)
+    {
+        this.focusStratey = focusStratey;
     }
 
     // if we want to change the target strategy, it's here

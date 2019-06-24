@@ -3,6 +3,7 @@
 public abstract class FocusStrategy
 {
     protected ShootingTurret turret;
+    protected Enemy lastTarget = null;
 
     public FocusStrategy(ShootingTurret turret)
     {
@@ -10,4 +11,5 @@ public abstract class FocusStrategy
     }
 
     public abstract GameObject GetEnemy();
+    public abstract Strategy GetStrat();
 }

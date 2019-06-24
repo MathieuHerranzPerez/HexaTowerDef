@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,8 +39,16 @@ public class TurretUI : MonoBehaviour
     [SerializeField]
     private Text slowAmountUpText = default;
 
+    [SerializeField]
+    private Dropdown focusStrategyDropdown = default;
+
     // ---- INTERN ----
     private Wall target;
+
+    void Start()
+    {
+        InitDropDownStrategy();
+    }
 
     public void SetTarget(Wall target)
     {
@@ -79,6 +88,17 @@ public class TurretUI : MonoBehaviour
             btnUpgradeTurret.DesactiveButton();
         }
 
+        if(target.Turret is ShootingTurret)
+        {
+            ShootingTurret st = (ShootingTurret)target.Turret;
+            ChangeDropdownStrategy((int) st.Strat);
+            focusStrategyDropdown.gameObject.SetActive(true);
+        }
+        else
+        {
+            focusStrategyDropdown.gameObject.SetActive(false);
+        }
+
         TurretRangeDisplayer.Instance.DisplayRange(target.Turret);
     }
 
@@ -108,5 +128,25 @@ public class TurretUI : MonoBehaviour
     public void HideUpgrade()
     {
         uiUpgrade.SetActive(false);
+    }
+
+    public void DropdownChanged()
+    {
+        ShootingTurret st = (ShootingTurret) target.Turret;
+        st.ChangeStrategy(FocusStrategyFactory.Instance.CreateStrategy((Strategy) focusStrategyDropdown.value, st));
+    }
+
+    public void ChangeDropdownStrategy(int index)
+    {
+        focusStrategyDropdown.value = index;
+    }
+
+    private void InitDropDownStrategy()
+    {
+        string[] enumNames = Enum.GetNames(typeof(Strategy));
+        List<string> listStrategy = new List<string>(enumNames);
+
+        focusStrategyDropdown.ClearOptions();
+        focusStrategyDropdown.AddOptions(listStrategy);
     }
 }

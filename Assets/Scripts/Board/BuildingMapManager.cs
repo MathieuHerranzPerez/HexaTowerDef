@@ -10,8 +10,8 @@ public class BuildingMapManager : MonoBehaviour
     private int nbBuildingToSpawnPerWave = 2;
 
     [Header("Setup")]
-    [SerializeField]
-    private CameraContainer cameraContainer = default;
+    //[SerializeField]
+    //private CameraContainer cameraContainer = default;
     [SerializeField]
     private TileGroup tileGroup = default;
     [SerializeField]
