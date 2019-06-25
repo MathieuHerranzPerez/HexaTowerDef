@@ -83,9 +83,9 @@ public class TileGroup : MonoBehaviour
         nbRotationLeft = nbRotationLeft % 6;
         foreach (Tile t in listTile)
         {
-            if (nbRotationLeft == 0)
+            /*if (nbRotationLeft == 0)
                 t.pos -= pointOffset;
-            else
+            else*/
             {
                 Tile tmp = buildingMapManager.GetTileAtWorldPos(t.transform);
                 if (tmp == null)

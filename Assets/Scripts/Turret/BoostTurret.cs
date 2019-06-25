@@ -1,11 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class BoostTurret : SupportTurret
 {
     [SerializeField]
-    protected float boost = 2f;
+    [Range(0f, 100f)]
+    protected float boost = 20f;
 
     // ---- INTERN ----
     protected float boostUp;

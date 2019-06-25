@@ -92,10 +92,10 @@ public class LaserTurret : ShootingTurret
         }
     }
 
-    public override void BoostDamage(float damage, bool isBuff)
+    public override void BoostDamage(float damagePercent, bool isBuff)
     {
         int multiplier = isBuff ? 1 : -1;
-        damage += (float) ((damage / 10) * multiplier);
+        this.damage += (float) (((baseDamage * damagePercent) / 100f) * multiplier);
     }
 
     protected override void InitUpStats()

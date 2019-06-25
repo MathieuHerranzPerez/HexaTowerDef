@@ -108,11 +108,11 @@ public abstract class ShootingTurret : Turret
         slowUp = st.slowPercent;
     }
 
-    public abstract void BoostDamage(float damage, bool isBuff);
-    public virtual void BoostRange(float range, bool isBuff)
+    public abstract void BoostDamage(float damagePercent, bool isBuff);
+    public virtual void BoostRange(float rangePercent, bool isBuff)
     {
         int multiplier = isBuff ? 1 : -1;
-        stats.range += (float) (range * multiplier);
+        stats.range += (float) (((stats.baseRange * rangePercent) / 100f) * multiplier);
     }
 
     public abstract float GetFireRate();

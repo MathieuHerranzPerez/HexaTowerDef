@@ -73,12 +73,6 @@ public class BulletTurret : ShootingTurret
         damageUp = bt.bulletPrefab.GetComponent<Bullet>().Damage;
     }
 
-    public override void BoostDamage(float damage, bool isBuff)
-    {
-        int multiplier = isBuff ? 1 : -1;
-        damage += (float) (damage * multiplier);
-    }
-
     public override float GetFireRate()
     {
         return fireRate;
@@ -89,9 +83,15 @@ public class BulletTurret : ShootingTurret
         return fireRateUp;
     }
 
-    public void BoostFireRate(float fireRate, bool isBuff)
+    public override void BoostDamage(float damagePercent, bool isBuff)
     {
         int multiplier = isBuff ? 1 : -1;
-        fireRate += (float)(fireRate * multiplier);
+        this.damage += (float) (((baseDamage * damagePercent) / 100f) * multiplier);
+    }
+
+    public void BoostFireRate(float fireRatePercent, bool isBuff)
+    {
+        int multiplier = isBuff ? 1 : -1;
+        this.fireRate += (float) (((baseDamage * fireRatePercent) / 100f) * multiplier);
     }
 }
