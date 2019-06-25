@@ -7,12 +7,6 @@ public abstract class Turret : MonoBehaviour
 
     [Header("Setup")]
     [SerializeField]
-    protected Transform partToRotateY = default;          // part of the turret to rotate
-    [SerializeField]
-    protected Transform partToRotateX = default;          // part of the turret to rotate
-    [SerializeField]
-    protected Transform firePoint = default;
-    [SerializeField]
     protected Sprite shopImg = default;
 
     [Header("Sounds")]
@@ -22,13 +16,12 @@ public abstract class Turret : MonoBehaviour
     [SerializeField]
     protected float volumeFire = 0.5f;
 
-
     public bool HasAnUpgrade { get { return stats.upgradedPrefab != null; } }
 
     // ---- INTERN ----
     protected AudioSource audioSource;
     protected Wall wall;
-
+    protected Turret turretUp = null;
 
     protected virtual void Awake()
     {
@@ -39,24 +32,17 @@ public abstract class Turret : MonoBehaviour
     {
         if (stats.upgradedPrefab != null)
         {
-            Turret turretUP = stats.upgradedPrefab.GetComponent<Turret>();
-            stats.fireRateUP = turretUP.stats.fireRate;
-            stats.rangeUP = turretUP.stats.range;
+            turretUp = stats.upgradedPrefab.GetComponent<Turret>();
+            stats.rangeUp = turretUp.stats.range;
 
-            if (stats.useLaser)
-            {
-                stats.slowUP = turretUP.stats.slowPercent;
-                stats.damageUP = turretUP.stats.damageOverTime;
-            }
-            else
-            {
-                stats.slowUP = 0f;
-                stats.damageUP = turretUP.stats.bulletPrefab.GetComponent<Bullet>().Damage;
-            }
+            InitUpStats();
         }
     }
 
-    public abstract int GetDamage();
+    protected virtual void InitUpStats()
+    {
+        stats.rangeUp = turretUp.stats.range;
+    }
 
     protected void Update()
     {
@@ -83,11 +69,6 @@ public abstract class Turret : MonoBehaviour
     public void SetWall(Wall wall)
     {
         this.wall = wall;
-    }
-
-    public void DisplayRange()
-    {
-        // todo
     }
 
     private void OnMouseDown()

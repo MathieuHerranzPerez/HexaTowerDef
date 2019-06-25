@@ -12,11 +12,6 @@ public class LaserTurret : ShootingTurret
     // ---- INTERN ----
     private bool isPlayingSound = false;
 
-    public override int GetDamage()
-    {
-        return (int) stats.damageOverTime;
-    }
-
     protected override void UpdateCall()
     {
         base.UpdateCall();
@@ -51,8 +46,8 @@ public class LaserTurret : ShootingTurret
 
     protected void Laser()
     {
-        targetEnemy.TakeDamage(stats.damageOverTime * Time.deltaTime);
-        targetEnemy.Slow(stats.slowPercent);
+        targetEnemy.TakeDamage(damage * Time.deltaTime);
+        targetEnemy.Slow(slowPercent);
 
         // graphics
         if (!lineRenderer.enabled)
@@ -82,6 +77,11 @@ public class LaserTurret : ShootingTurret
         }
     }
 
+    protected override void InitBaseStats()
+    {
+        base.InitBaseStats();
+    }
+
     private void StopLaser()
     {
         if (lineRenderer.enabled)
@@ -90,5 +90,27 @@ public class LaserTurret : ShootingTurret
             impactEffect.Stop();
             impactLight.enabled = false;
         }
+    }
+
+    public override void BoostDamage(float damage, bool isBuff)
+    {
+        int multiplier = isBuff ? 1 : -1;
+        damage += (float) ((damage / 10) * multiplier);
+    }
+
+    protected override void InitUpStats()
+    {
+        LaserTurret lt = (LaserTurret)turretUp;
+        damageUp = lt.damage;
+    }
+
+    public override float GetFireRate()
+    {
+        return 0f;
+    }
+
+    public override float GetFireRateUp()
+    {
+        return 0;
     }
 }

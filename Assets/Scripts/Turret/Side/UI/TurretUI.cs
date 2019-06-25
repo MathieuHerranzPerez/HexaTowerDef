@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,6 +26,8 @@ public class TurretUI : MonoBehaviour
     private Text fireRateText = default;
     [SerializeField]
     private Text slowAmountText = default;
+    [SerializeField]
+    private Text boostAmountText = default;
 
     [SerializeField]
     private GameObject uiUpgrade = default;
@@ -38,9 +39,16 @@ public class TurretUI : MonoBehaviour
     private Text fireRateUpText = default;
     [SerializeField]
     private Text slowAmountUpText = default;
+    [SerializeField]
+    private Text boostAmountUpText = default;
 
     [SerializeField]
     private Dropdown focusStrategyDropdown = default;
+
+    [SerializeField]
+    private Canvas ShootingTurretCanvas = default;
+    [SerializeField]
+    private Canvas SupportTurretCanvas = default;
 
     // ---- INTERN ----
     private Wall target;
@@ -58,24 +66,35 @@ public class TurretUI : MonoBehaviour
 
         sellAmountText.text = target.Turret.GetSellAmount().ToString();
         turretImg.sprite = target.Turret.GetImg();
-        damageText.text = target.Turret.GetDamage().ToString();
         rangeText.text = target.Turret.stats.range.ToString();
-        fireRateText.text = target.Turret.stats.fireRate.ToString();
 
-        if (target.Turret is LaserTurret)
+        if (target.Turret is ShootingTurret)
         {
-            LaserTurret t = (LaserTurret) target.Turret;
-            slowAmountText.text = ((int) t.stats.slowPercent).ToString() + "%";
+            SupportTurretCanvas.gameObject.SetActive(false);
+            ShootingTurretCanvas.gameObject.SetActive(true);
+
+            ShootingTurret t = (ShootingTurret) target.Turret;
+            fireRateText.text = t.GetFireRate().ToString();
+            fireRateUpText.text = t.GetFireRateUp().ToString();
+            damageText.text = t.GetDamage().ToString();
+            damageUpText.text = t.GetDamageUp().ToString();
+            slowAmountText.text = ((int) t.SlowPercent).ToString() + "%";
+            slowAmountUpText.text = ((int)t.SlowPercentUp).ToString() + "%";
+
+            ShootingTurret st = (ShootingTurret)target.Turret;
+            ChangeDropdownStrategy((int)st.Strat);
         }
-        else
+        else // support
         {
-            slowAmountText.text = "0%";
+            SupportTurretCanvas.gameObject.SetActive(true);
+            ShootingTurretCanvas.gameObject.SetActive(false);
+
+            BoostTurret bt = (BoostTurret)target.Turret;
+            boostAmountText.text = bt.GetBoost().ToString();
+            boostAmountUpText.text = bt.GetBoostUp().ToString();
         }
 
-        damageUpText.text = target.Turret.stats.damageUP.ToString();
-        rangeUpText.text = target.Turret.stats.rangeUP.ToString();
-        fireRateUpText.text = target.Turret.stats.fireRateUP.ToString();
-        slowAmountUpText.text = target.Turret.stats.slowUP.ToString();
+        rangeUpText.text = target.Turret.stats.rangeUp.ToString(); 
 
         if (target.Turret.HasAnUpgrade)
         {
@@ -86,17 +105,6 @@ public class TurretUI : MonoBehaviour
         {
             upgradeCostText.text = "";
             btnUpgradeTurret.DesactiveButton();
-        }
-
-        if(target.Turret is ShootingTurret)
-        {
-            ShootingTurret st = (ShootingTurret)target.Turret;
-            ChangeDropdownStrategy((int) st.Strat);
-            focusStrategyDropdown.gameObject.SetActive(true);
-        }
-        else
-        {
-            focusStrategyDropdown.gameObject.SetActive(false);
         }
 
         TurretRangeDisplayer.Instance.DisplayRange(target.Turret);
@@ -123,11 +131,13 @@ public class TurretUI : MonoBehaviour
     public void DisplayUpgrade()
     {
         uiUpgrade.SetActive(true);
+        rangeUpText.gameObject.SetActive(true);
     }
 
     public void HideUpgrade()
     {
         uiUpgrade.SetActive(false);
+        rangeUpText.gameObject.SetActive(false);
     }
 
     public void DropdownChanged()

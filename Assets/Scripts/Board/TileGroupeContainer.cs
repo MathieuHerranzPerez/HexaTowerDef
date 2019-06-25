@@ -84,4 +84,10 @@ public class TileGroupeContainer : MonoBehaviour
     {
         isActivated = false;
     }
+
+    public void Reset()
+    {
+        nbRotationLeft = 0;
+        transform.rotation = Quaternion.identity;
+    }
 }

@@ -52,6 +52,7 @@ public class TileGroup : MonoBehaviour
     public List<Tile> GenerateSquare(bool withSpawn)
     {
         Clear();
+        tileContainer.Reset();
         listTile = mapCreator.BuildSquare(tileContainer.transform, out currentCenter);
 
         BuildWalls(listTile, withSpawn);
@@ -62,6 +63,7 @@ public class TileGroup : MonoBehaviour
     public List<Tile> GenerateCircle(bool withSpawn)
     {
         Clear();
+        tileContainer.Reset();
         listTile = mapCreator.BuildCircle(tileContainer.transform, out currentCenter);
 
         BuildWalls(listTile, withSpawn);

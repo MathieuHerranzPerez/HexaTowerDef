@@ -2,9 +2,16 @@
 
 public class BulletTurret : ShootingTurret
 {
+    [Range(0.05f, 20f)]
+    public float fireRate = 1f;
+    public GameObject bulletPrefab;
+
     // ---- INTERN ----
     protected float fireCountdown = 0f;
     protected bool canShoot = true;
+
+    protected float fireRateUp;
+    protected float baseFireRate;
 
     protected override void UpdateCall()
     {
@@ -24,7 +31,7 @@ public class BulletTurret : ShootingTurret
 
                         Shoot();
                         canShoot = false;
-                        fireCountdown = 1f / stats.fireRate;
+                        fireCountdown = 1f / fireRate;
                     }
                 }
             }
@@ -38,8 +45,9 @@ public class BulletTurret : ShootingTurret
     protected void Shoot()
     {
         audioSource.PlayOneShot(fireSound, volumeFire);     // play the sound
-        GameObject bulletGameObject = (GameObject)Instantiate(stats.bulletPrefab, firePoint.position, firePoint.rotation);
+        GameObject bulletGameObject = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Bullet bullet = bulletGameObject.GetComponent<Bullet>();
+        bullet.SetDamage((int) damage);
 
         if (bullet != null)
         {
@@ -47,8 +55,43 @@ public class BulletTurret : ShootingTurret
         }
     }
 
-    public override int GetDamage()
+    protected override void InitBaseStats()
     {
-        return stats.bulletPrefab.GetComponent<Bullet>().Damage;
+        base.InitBaseStats();
+
+        baseFireRate = fireRate;
+        baseDamage = damage;
+    }
+
+    protected override void InitUpStats()
+    {
+        base.InitUpStats();
+
+        BulletTurret bt = (BulletTurret)turretUp;
+        fireRateUp = bt.fireRate;
+        slowUp = bt.slowPercent;
+        damageUp = bt.bulletPrefab.GetComponent<Bullet>().Damage;
+    }
+
+    public override void BoostDamage(float damage, bool isBuff)
+    {
+        int multiplier = isBuff ? 1 : -1;
+        damage += (float) (damage * multiplier);
+    }
+
+    public override float GetFireRate()
+    {
+        return fireRate;
+    }
+
+    public override float GetFireRateUp()
+    {
+        return fireRateUp;
+    }
+
+    public void BoostFireRate(float fireRate, bool isBuff)
+    {
+        int multiplier = isBuff ? 1 : -1;
+        fireRate += (float)(fireRate * multiplier);
     }
 }

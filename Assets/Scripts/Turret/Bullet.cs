@@ -55,6 +55,11 @@ public class Bullet : MonoBehaviour
         }
     }
 
+    public void SetDamage(int damage)
+    {
+        this.damage = damage;
+    }
+
     private void HitTarget()
     {
         // instantiate particules
