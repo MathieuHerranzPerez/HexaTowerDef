@@ -83,15 +83,19 @@ public class BulletTurret : ShootingTurret
         return fireRateUp;
     }
 
-    public override void BoostDamage(float damagePercent, bool isBuff)
+    public override float GetSpeed()
     {
-        int multiplier = isBuff ? 1 : -1;
-        this.damage += (float) (((baseDamage * damagePercent) / 100f) * multiplier);
+        return fireRate;
     }
 
-    public void BoostFireRate(float fireRatePercent, bool isBuff)
+    public override float GetSpeedUp()
+    {
+        return fireRateUp;
+    }
+
+    public override void BoostFireRate(float fireRatePercent, bool isBuff)
     {
         int multiplier = isBuff ? 1 : -1;
-        this.fireRate += (float) (((baseDamage * fireRatePercent) / 100f) * multiplier);
+        this.fireRate += (float)(((baseFireRate * fireRatePercent) / 100f) * multiplier);
     }
 }

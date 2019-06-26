@@ -111,6 +111,22 @@ public class LaserTurret : ShootingTurret
 
     public override float GetFireRateUp()
     {
-        return 0;
+        return 0f;
+    }
+
+    public override float GetSpeed()
+    {
+        return 1f;
+    }
+
+    public override float GetSpeedUp()
+    {
+        return 1f;
+    }
+
+    public override void BoostFireRate(float fireRatePercent, bool isBuff)
+    {
+        int multiplier = isBuff ? 1 : -1;
+        this.baseDamage += (float)(((baseDamage * fireRatePercent) / 100f) * multiplier);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -25,10 +24,46 @@ public class Enemy : MonoBehaviour
     // ---- INTERN ----
     private EnemySpawner enemySpawner;
 
+    // tuple<amount, duration>
+    private Dictionary<DebuffName, List<Debuff>> dictionaryDebuff = new Dictionary<DebuffName, List<Debuff>>();
+
     void Start()
     {
         speed = startSpeed;
         health = startHealth;
+
+        foreach (DebuffName debuffName in (DebuffName[])Enum.GetValues(typeof(DebuffName)))
+        {
+            dictionaryDebuff.Add(debuffName, new List<Debuff>());
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        foreach (List<Debuff> listDebuff in dictionaryDebuff.Values)
+        {            // reduce duration
+            for (int i = 0; i < listDebuff.Count; ++i)
+            {
+                listDebuff[i].duration -= Time.deltaTime;
+                if (listDebuff[i].duration <= 0f)
+                    listDebuff.RemoveAt(i);
+            }
+
+            // do effect
+            if (listDebuff.Count > 0)
+            {
+                Debuff current = listDebuff[0];
+                for (int i = 1; i < listDebuff.Count; ++i)
+                {
+                    if (listDebuff[i] > current)
+                    {
+                        current = listDebuff[i];
+                    }
+                }
+
+                current.DoEffect();
+            }
+        }
     }
 
     void LateUpdate()
@@ -61,6 +96,11 @@ public class Enemy : MonoBehaviour
     {
         float newSpeed = startSpeed - ((percent * startSpeed) / 100);
         speed = newSpeed < speed ? newSpeed : speed;
+    }
+
+    public void Slow(float percent, float duration)
+    {
+        dictionaryDebuff[DebuffName.Slow].Add(new SlowDebuff(percent, duration, this));        
     }
 
     private void Die()
@@ -119,5 +159,10 @@ public class Enemy : MonoBehaviour
         }
 
         return nbEnemies;
+    }
+
+    private enum DebuffName
+    {
+        Slow,
     }
 }

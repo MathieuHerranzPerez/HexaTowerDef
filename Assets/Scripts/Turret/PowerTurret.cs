@@ -3,7 +3,7 @@ public class PowerTurret : BoostTurret
 {
     protected override void BoostAll()
     {
-        foreach(ShootingTurret turret in listTargetToBoost)
+        foreach(BoostableTurret turret in listTargetToBoost)
         {
             turret.BoostDamage(boost, true);
         }
@@ -11,7 +11,7 @@ public class PowerTurret : BoostTurret
 
     protected override void UnboostAll()
     {
-        foreach (ShootingTurret turret in listTarget)
+        foreach (BoostableTurret turret in listTarget)
         {
             turret.BoostDamage(boost, false);
         }

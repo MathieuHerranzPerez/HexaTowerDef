@@ -26,17 +26,20 @@ public abstract class Turret : MonoBehaviour
     protected virtual void Awake()
     {
         audioSource = GetComponent<AudioSource>();
-    }
 
-    protected virtual void Start()
-    {
+        InitBaseStats();
+
         if (stats.upgradedPrefab != null)
         {
             turretUp = stats.upgradedPrefab.GetComponent<Turret>();
-            stats.rangeUp = turretUp.stats.range;
 
             InitUpStats();
         }
+    }
+
+    protected virtual void InitBaseStats()
+    {
+        stats.baseRange = stats.range;
     }
 
     protected virtual void InitUpStats()

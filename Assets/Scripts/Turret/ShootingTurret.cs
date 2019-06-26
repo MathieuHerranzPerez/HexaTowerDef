@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public abstract class ShootingTurret : Turret
+public abstract class ShootingTurret : BoostableTurret, SlowDamageSpeedTurret
 {
     public Strategy Strat { get { return focusStratey.GetStrat() ; } }
 
@@ -10,6 +10,7 @@ public abstract class ShootingTurret : Turret
     [SerializeField]
     protected float damage = 50f;
     [SerializeField]
+    [Range(0f, 100f)]
     protected float slowPercent = 0f;
 
     [Header("Setup")]
@@ -36,12 +37,8 @@ public abstract class ShootingTurret : Turret
     protected float baseSlow;
 
 
-    protected override void Start()
+    protected void Start()
     {
-        base.Start();
-
-        InitBaseStats();
-
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
         focusStratey = new FocusVisibleNearest(this);
         enemyLayer = Mathf.RoundToInt(Mathf.Log(enemyMask.value, 2));
@@ -91,12 +88,12 @@ public abstract class ShootingTurret : Turret
         partToRotateX.localRotation = Quaternion.Euler(rotationX.x, 0f, 0f);
     }
 
-    protected virtual void InitBaseStats()
+    protected override void InitBaseStats()
     {
+        base.InitBaseStats();
+
         baseDamage = damage;
         baseSlow = slowPercent;
-
-        stats.baseRange = stats.range;
     }
 
     protected override void InitUpStats()
@@ -108,15 +105,14 @@ public abstract class ShootingTurret : Turret
         slowUp = st.slowPercent;
     }
 
-    public abstract void BoostDamage(float damagePercent, bool isBuff);
-    public virtual void BoostRange(float rangePercent, bool isBuff)
-    {
-        int multiplier = isBuff ? 1 : -1;
-        stats.range += (float) (((stats.baseRange * rangePercent) / 100f) * multiplier);
-    }
-
     public abstract float GetFireRate();
     public abstract float GetFireRateUp();
+
+    public override void BoostDamage(float damagePercent, bool isBuff)
+    {
+        int multiplier = isBuff ? 1 : -1;
+        this.damage += (float)(((baseDamage * damagePercent) / 100f) * multiplier);
+    }
 
     public float GetDamage()
     {
@@ -126,4 +122,18 @@ public abstract class ShootingTurret : Turret
     {
         return damageUp;
     }
+
+    public float GetSlow()
+    {
+        return slowPercent;
+    }
+
+    public float GetSlowUp()
+    {
+        return SlowPercentUp;
+    }
+
+    public abstract float GetSpeed();
+
+    public abstract float GetSpeedUp();
 }

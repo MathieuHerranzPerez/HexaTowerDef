@@ -68,21 +68,30 @@ public class TurretUI : MonoBehaviour
         turretImg.sprite = target.Turret.GetImg();
         rangeText.text = target.Turret.stats.range.ToString();
 
-        if (target.Turret is ShootingTurret)
+        if (target.Turret is SlowDamageSpeedTurret)
         {
             SupportTurretCanvas.gameObject.SetActive(false);
             ShootingTurretCanvas.gameObject.SetActive(true);
 
-            ShootingTurret t = (ShootingTurret) target.Turret;
-            fireRateText.text = t.GetFireRate().ToString();
-            fireRateUpText.text = t.GetFireRateUp().ToString();
+            SlowDamageSpeedTurret t = (SlowDamageSpeedTurret) target.Turret;
+            fireRateText.text = t.GetSpeed().ToString();
+            fireRateUpText.text = t.GetSpeedUp().ToString();
             damageText.text = t.GetDamage().ToString();
             damageUpText.text = t.GetDamageUp().ToString();
-            slowAmountText.text = ((int) t.SlowPercent).ToString() + "%";
-            slowAmountUpText.text = ((int)t.SlowPercentUp).ToString() + "%";
+            slowAmountText.text = ((int) t.GetSlow()).ToString() + "%";
+            slowAmountUpText.text = ((int)t.GetSlowUp()).ToString() + "%";
 
-            ShootingTurret st = (ShootingTurret)target.Turret;
-            ChangeDropdownStrategy((int)st.Strat);
+            if (target.Turret is ShootingTurret)
+            {
+                ShootingTurret st = (ShootingTurret)target.Turret;
+                ChangeDropdownStrategy((int)st.Strat);
+
+                focusStrategyDropdown.gameObject.SetActive(true);
+            }
+            else
+            {
+                focusStrategyDropdown.gameObject.SetActive(false);
+            }
         }
         else // support
         {

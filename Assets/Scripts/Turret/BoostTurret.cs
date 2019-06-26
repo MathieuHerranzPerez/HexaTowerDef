@@ -9,8 +9,8 @@ public abstract class BoostTurret : SupportTurret
 
     // ---- INTERN ----
     protected float boostUp;
-    protected List<ShootingTurret> listTarget = new List<ShootingTurret>();
-    protected List<ShootingTurret> listTargetToBoost = new List<ShootingTurret>();
+    protected List<BoostableTurret> listTarget = new List<BoostableTurret>();
+    protected List<BoostableTurret> listTargetToBoost = new List<BoostableTurret>();
 
     protected override void UpdateCall()
     {
@@ -28,9 +28,9 @@ public abstract class BoostTurret : SupportTurret
             if (collider.gameObject.tag == gameObject.tag)
             {
                 Turret t = collider.gameObject.GetComponent<Turret>();
-                if (t != null && t is ShootingTurret)
+                if (t != null && t is BoostableTurret)
                 {
-                    ShootingTurret st = (ShootingTurret)t;
+                    BoostableTurret st = (BoostableTurret)t;
                     if (!listTarget.Contains(st))
                     {
                         listTargetToBoost.Add(st);
