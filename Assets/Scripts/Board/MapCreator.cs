@@ -25,6 +25,7 @@ public class MapCreator : MonoBehaviour
     private float xOffset = 0.866f;
     private float zOffset = 0.75f;
 
+    [HideInInspector]
     [SerializeField]
     private TileDictionary pointToTileStorage = TileDictionary.New<TileDictionary>();
     private Dictionary<Point, Tile> tileDictionary
