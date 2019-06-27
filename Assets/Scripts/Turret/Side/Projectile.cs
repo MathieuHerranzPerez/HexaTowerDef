@@ -12,8 +12,8 @@ public abstract class Projectile : MonoBehaviour
     protected int damage = 50;
 
     [Header("Setup")]
-    // [SerializeField]
-    // private GameObject impactEffect;
+    [SerializeField]
+    private GameObject impactEffect;
     [SerializeField]
     protected AudioClip soundWhenTuch = default;
     [Range(0.05f, 1f)]
@@ -24,11 +24,17 @@ public abstract class Projectile : MonoBehaviour
 
     // ---- INTERN ----
     protected Transform target;
+    protected Rigidbody rb;
 
 
     public virtual void SetTarget(Transform target)
     {
         this.target = target;
+    }
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
     }
 
     void Update()
@@ -43,11 +49,13 @@ public abstract class Projectile : MonoBehaviour
         this.damage = damage;
     }
 
-    protected void HitTarget()
+    protected void HitTarget(Transform other)
     {
-        // instantiate particules
-        // GameObject effectInstance = (GameObject)Instantiate(impactEffect, transform.position, transform.rotation);
-        // Destroy(effectInstance, 5f);
+        if (impactEffect != null)       // todo RemoveAtEnd
+        {
+            GameObject effectInstance = (GameObject)Instantiate(impactEffect, transform.position, transform.rotation);
+            Destroy(effectInstance, 5f);
+        }
 
         if (explosionRadius > 0f)
         {
@@ -55,10 +63,11 @@ public abstract class Projectile : MonoBehaviour
         }
         else
         {
-            MakeDamage(target);
+            if(other.GetComponent<Enemy>() != null)
+            MakeDamage(other);
         }
 
-        if (soundWhenTuch != null)
+        if (soundWhenTuch != null)      // todo RemoveAtEnd
         {
             // invoke another gameobject to play the sound
             GameObject soundGO = (GameObject)Instantiate(audioPlayer, transform.position, transform.rotation);
@@ -98,4 +107,11 @@ public abstract class Projectile : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, explosionRadius);
     }
+
+    void OnTriggerEnter(Collider other)
+    {
+        ActOnTriggerEnter(other);
+    }
+
+    protected abstract void ActOnTriggerEnter(Collider other);
 }

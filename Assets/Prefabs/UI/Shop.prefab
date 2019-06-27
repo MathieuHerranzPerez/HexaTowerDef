@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3638217353520061169}
   - component: {fileID: 3638217353520061174}
   - component: {fileID: 3638217353520061172}
-  - component: {fileID: 1239049637093072436}
+  - component: {fileID: 3436490053276101710}
   m_Layer: 5
   m_Name: Shop
   m_TagString: Untagged
@@ -96,9 +96,10 @@ MonoBehaviour:
   - {fileID: 289865092360979009, guid: c58da0d0c78411e41a6d7f2124ee002b, type: 3}
   - {fileID: 5110550085495160005, guid: 5cacb214014bab043a8727e9a0ec88b8, type: 3}
   - {fileID: 8623356658122345580, guid: 372a9dc214204d740b49d3c85db30541, type: 3}
+  - {fileID: 6617120325005237573, guid: 206a91f95732ea445964ee72a8936ee3, type: 3}
   buttonShopTurretPrefab: {fileID: 5055798344224703201, guid: 6594e8f0dc5a3094196d051aa33c6919,
     type: 3}
---- !u!114 &1239049637093072436
+--- !u!114 &3436490053276101710
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,7 +108,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3638217353520061178}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 1297475563, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: -2095666955, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
@@ -115,11 +116,10 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 4
-  m_Spacing: 10
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 0
-  m_ChildControlWidth: 0
-  m_ChildControlHeight: 0
-  m_ChildScaleWidth: 0
-  m_ChildScaleHeight: 0
+  m_ChildAlignment: 1
+  m_StartCorner: 0
+  m_StartAxis: 1
+  m_CellSize: {x: 90, y: 90}
+  m_Spacing: {x: 10, y: 10}
+  m_Constraint: 1
+  m_ConstraintCount: 2

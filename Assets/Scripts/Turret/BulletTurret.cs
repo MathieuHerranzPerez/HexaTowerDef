@@ -3,8 +3,10 @@
 public abstract class BulletTurret : ShootingTurret
 {
     [Range(0.05f, 20f)]
-    public float fireRate = 1f;
-    public GameObject bulletPrefab;
+    [SerializeField]
+    protected float fireRate = 1f;
+    [SerializeField]
+    protected GameObject bulletPrefab;
 
     // ---- INTERN ----
     protected float fireCountdown = 0f;
@@ -44,6 +46,8 @@ public abstract class BulletTurret : ShootingTurret
         audioSource.PlayOneShot(fireSound, volumeFire);     // play the sound
         GameObject bulletGameObject = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Projectile bullet = bulletGameObject.GetComponent<Projectile>();
+        Destroy(bulletGameObject, 5f);
+
         lastBulletFired = bullet;
         bullet.SetDamage((int) damage);
 

@@ -20,7 +20,7 @@ public class BasicWithoutTargetTurret : WithoutTargetTurret
 
         if(doEffect)
         {
-            ParticleSystem ps = (ParticleSystem)Instantiate(effect, effectSpawnPoint.position, effectSpawnPoint.rotation, transform);
+            ParticleSystem ps = (ParticleSystem)Instantiate(effect, effectSpawnPoint.position, effectSpawnPoint.rotation, effectSpawnPoint);
             Destroy(ps.gameObject, 2f);
             doEffect = false;
         }

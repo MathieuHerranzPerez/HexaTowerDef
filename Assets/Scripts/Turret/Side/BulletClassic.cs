@@ -4,6 +4,22 @@ using UnityEngine;
 
 public class BulletClassic : Projectile
 {
+    protected override void ActOnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        {
+            Enemy currentEnemy = other.GetComponent<Enemy>();
+            if (currentEnemy != null)
+            {
+                HitTarget(other.transform);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
+        }
+    }
+
     protected override void UpdateCall()
     {
         if (target == null)
@@ -18,7 +34,7 @@ public class BulletClassic : Projectile
             // if we hit the target
             if (direction.magnitude <= distanceThisFrame)
             {
-                HitTarget();
+                HitTarget(target);
             }
             else
             {
@@ -26,5 +42,7 @@ public class BulletClassic : Projectile
                 transform.LookAt(target);
             }
         }
+        // follow the gravity
+        //transform.LookAt(transform.position + rb.velocity);
     }
 }
