@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class BulletTurret : ShootingTurret
+public abstract class BulletTurret : ShootingTurret
 {
     [Range(0.05f, 20f)]
     public float fireRate = 1f;
@@ -13,6 +13,8 @@ public class BulletTurret : ShootingTurret
     protected float fireRateUp;
     protected float baseFireRate;
 
+    protected Projectile lastBulletFired;
+
     protected override void UpdateCall()
     {
         base.UpdateCall();
@@ -21,18 +23,11 @@ public class BulletTurret : ShootingTurret
         { 
             if (canShoot)
             {
-                RaycastHit hit;
-                // check if there is no obstacle between the fire point and the target
-                if (Physics.Raycast(firePoint.position, firePoint.TransformDirection(Vector3.forward), out hit, stats.range))
+                if (CheckShootCondition())
                 {
-                    if (hit.collider.gameObject.layer == enemyLayer)
-                    {
-                        Debug.DrawRay(firePoint.position, firePoint.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);  // affD
-
-                        Shoot();
-                        canShoot = false;
-                        fireCountdown = 1f / fireRate;
-                    }
+                    Shoot();
+                    canShoot = false;
+                    fireCountdown = 1f / fireRate;
                 }
             }
         }
@@ -42,11 +37,14 @@ public class BulletTurret : ShootingTurret
             canShoot = true;
     }
 
-    protected void Shoot()
+    protected abstract bool CheckShootCondition();
+
+    protected virtual void Shoot()
     {
         audioSource.PlayOneShot(fireSound, volumeFire);     // play the sound
         GameObject bulletGameObject = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
-        Bullet bullet = bulletGameObject.GetComponent<Bullet>();
+        Projectile bullet = bulletGameObject.GetComponent<Projectile>();
+        lastBulletFired = bullet;
         bullet.SetDamage((int) damage);
 
         if (bullet != null)
@@ -70,7 +68,7 @@ public class BulletTurret : ShootingTurret
         BulletTurret bt = (BulletTurret)turretUp;
         fireRateUp = bt.fireRate;
         slowUp = bt.slowPercent;
-        damageUp = bt.bulletPrefab.GetComponent<Bullet>().Damage;
+        damageUp = bt.bulletPrefab.GetComponent<Projectile>().Damage;
     }
 
     public override float GetFireRate()

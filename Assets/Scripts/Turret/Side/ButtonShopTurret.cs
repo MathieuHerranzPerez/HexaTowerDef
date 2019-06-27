@@ -7,6 +7,8 @@ public class ButtonShopTurret : MonoBehaviour
     [SerializeField]
     private Image turretImg = default;
     [SerializeField]
+    private Color imgSelectedColor = default;
+    [SerializeField]
     private Text priceText = default;
     [SerializeField]
     private Button btn = default;
@@ -28,8 +30,19 @@ public class ButtonShopTurret : MonoBehaviour
         btn.onClick.AddListener(NotifyShop);
     }
 
+    public void ResetColor()
+    {
+        turretImg.color = Color.white;
+    }
+
     private void NotifyShop()
     {
-        shop.NotifyBtnClicked(turretPrefab);
+        shop.NotifyBtnClicked(this, turretPrefab);
+        Highlight();
+    }
+
+    private void Highlight()
+    {
+        turretImg.color = imgSelectedColor;
     }
 }

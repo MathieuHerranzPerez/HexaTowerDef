@@ -689,8 +689,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1206080299743373527}
+  - component: {fileID: -2347200296842614583}
   - component: {fileID: 8759048630801735384}
-  - component: {fileID: 4473758582461562272}
   - component: {fileID: 5945498474518626005}
   - component: {fileID: 3973437445004035058}
   m_Layer: 11
@@ -715,6 +715,41 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-2347200296842614583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8757431270202150401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74775c3ce56e15c47bb4299d354a2d33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  stats:
+    cost: 200
+    range: 15
+    turnSpeed: 10
+    upgradeCost: 100
+    upgradedPrefab: {fileID: 0}
+    rangeUp: 0
+    baseRange: 0
+  shopImg: {fileID: 21300000, guid: 9abee971b8ac2a54ba9dea36373621ac, type: 3}
+  fireSound: {fileID: 8300000, guid: 31a2694bbbdff9348a68e44ca469d84c, type: 3}
+  volumeFire: 0.1
+  damage: 30
+  slowPercent: 0
+  enemyTag: EnemyWalker
+  enemyMask:
+    serializedVersion: 2
+    m_Bits: 256
+  partToRotateY: {fileID: 5432307702089672718}
+  partToRotateX: {fileID: 209247225982737187}
+  firePoint: {fileID: 4936874872597902407}
+  fireRate: 0.3
+  bulletPrefab: {fileID: 7597849092844926694, guid: 774a1e6b8394df34b90cb8e6ab028833,
+    type: 3}
 --- !u!82 &8759048630801735384
 AudioSource:
   m_ObjectHideFlags: 0
@@ -811,41 +846,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &4473758582461562272
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8757431270202150401}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b440b2094481c74180567b9fba1e065, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  stats:
-    cost: 200
-    range: 15
-    turnSpeed: 10
-    upgradeCost: 100
-    upgradedPrefab: {fileID: 0}
-    rangeUp: 0
-    baseRange: 0
-  shopImg: {fileID: 21300000, guid: 9abee971b8ac2a54ba9dea36373621ac, type: 3}
-  fireSound: {fileID: 8300000, guid: 31a2694bbbdff9348a68e44ca469d84c, type: 3}
-  volumeFire: 0.05
-  damage: 50
-  slowPercent: 0
-  enemyTag: EnemyWalker
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 256
-  partToRotateY: {fileID: 5432307702089672718}
-  partToRotateX: {fileID: 209247225982737187}
-  firePoint: {fileID: 4936874872597902407}
-  fireRate: 1
-  bulletPrefab: {fileID: 7597849092844926694, guid: 774a1e6b8394df34b90cb8e6ab028833,
-    type: 3}
 --- !u!54 &5945498474518626005
 Rigidbody:
   m_ObjectHideFlags: 0
