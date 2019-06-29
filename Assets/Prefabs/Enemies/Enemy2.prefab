@@ -113,6 +113,8 @@ MonoBehaviour:
   worth: 40
   spawnWhenDieArray:
   - {fileID: 5312460075185174042, guid: 6a26f243c8c197b4793fb8ff85507169, type: 3}
+  damageUIPrefab: {fileID: 8375316302368770152, guid: 37fe735fb4d4d8b4a84c710c0411816e,
+    type: 3}
 --- !u!114 &9065697247006769921
 MonoBehaviour:
   m_ObjectHideFlags: 0

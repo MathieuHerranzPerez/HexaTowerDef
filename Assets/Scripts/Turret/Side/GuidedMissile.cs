@@ -1,16 +1,19 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 public class GuidedMissile : Projectile
 {
     [SerializeField]
     private float rotateSpeed = 180f;
+    [SerializeField]
+    private float timeBeforeLaunch = 1.2f;
 
     [Header("Setup")]
     [SerializeField]
-    private GameObject EffectGO = default;
+    private GameObject effectGO = default;
     [SerializeField]
-    private AudioClip SoundAtMissileLaunch = default;
+    private AudioClip soundAtMissileLaunch = default;
     [Range(0f, 1f)]
     [SerializeField]
     private float volumeLaucnh = 0.5f;
@@ -35,18 +38,22 @@ public class GuidedMissile : Projectile
     {
         if (target != null)
         {
-            if (isChasing || rb.velocity.y <= 1)
+            if(!isChasing)
             {
-                if (!isChasing)
+                timeBeforeLaunch -= Time.deltaTime;
+                if(timeBeforeLaunch <= 0)
                 {
                     isChasing = true;
-                    EffectGO.SetActive(true);
+                    effectGO.SetActive(true);
                     GameObject soundGO = (GameObject)Instantiate(audioPlayer, transform.position, transform.rotation);
                     AudioPlayer _audioPlayer = soundGO.GetComponent<AudioPlayer>();
-                    _audioPlayer.Play(SoundAtMissileLaunch, volumeLaucnh);
+                    _audioPlayer.Play(soundAtMissileLaunch, volumeLaucnh);
                     Destroy(soundGO, 1.5f);
                 }
+            }
 
+            if (isChasing /*|| rb.velocity.y <= 0*/)
+            {
                 // direction
                 Vector3 direction = target.position - transform.position;
                 direction.Normalize();
@@ -73,7 +80,7 @@ public class GuidedMissile : Projectile
     public void Impulse(float force)
     {
         rb = GetComponent<Rigidbody>();
-        rb.AddForce(transform.forward * force);
+        rb.AddForce(transform.forward * force, ForceMode.Impulse);
     }
 
     protected override void ActOnTriggerEnter(Collider other)

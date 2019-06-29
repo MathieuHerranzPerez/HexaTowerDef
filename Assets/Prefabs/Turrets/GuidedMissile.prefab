@@ -14606,8 +14606,8 @@ MonoBehaviour:
   audioPlayer: {fileID: 3125802772445373179, guid: 83f21e079bd97d347a8ab64ffb88a3f6,
     type: 3}
   rotateSpeed: 5
-  EffectGO: {fileID: 8749890080094235871}
-  SoundAtMissileLaunch: {fileID: 8300000, guid: b2201d306191335449a39d98774dd4ac,
+  effectGO: {fileID: 8749890080094235871}
+  soundAtMissileLaunch: {fileID: 8300000, guid: b2201d306191335449a39d98774dd4ac,
     type: 3}
   volumeLaucnh: 0.1
 --- !u!54 &1707628290982224696

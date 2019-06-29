@@ -64,7 +64,7 @@ public abstract class Projectile : MonoBehaviour
         else
         {
             if(other.GetComponent<Enemy>() != null)
-            MakeDamage(other);
+                MakeDamage(other);
         }
 
         if (soundWhenTuch != null)      // todo RemoveAtEnd

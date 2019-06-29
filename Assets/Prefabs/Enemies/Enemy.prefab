@@ -112,6 +112,8 @@ MonoBehaviour:
   startHealth: 150
   worth: 40
   spawnWhenDieArray: []
+  damageUIPrefab: {fileID: 8375316302368770152, guid: 37fe735fb4d4d8b4a84c710c0411816e,
+    type: 3}
 --- !u!114 &7235765786422572190
 MonoBehaviour:
   m_ObjectHideFlags: 0

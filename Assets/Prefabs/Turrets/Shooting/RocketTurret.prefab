@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2974781899018816514}
   - component: {fileID: 7804257981008471087}
   - component: {fileID: 8848904517342847822}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -598,7 +598,7 @@ MonoBehaviour:
   fireRate: 0.15
   bulletPrefab: {fileID: 6343989327496380177, guid: ec408adb9b81a5741a4517644c9df24b,
     type: 3}
-  impulseForce: 12
+  impulseForce: 15
 --- !u!82 &6616485928740801948
 AudioSource:
   m_ObjectHideFlags: 0

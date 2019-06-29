@@ -21,13 +21,17 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private GameObject[] spawnWhenDieArray = new GameObject[0];
 
+    [Header("Setup")]
+    [SerializeField]
+    private GameObject damageUIPrefab = default;
+
     // ---- INTERN ----
     private EnemySpawner enemySpawner;
 
     // tuple<amount, duration>
     private Dictionary<DebuffName, List<Debuff>> dictionaryDebuff = new Dictionary<DebuffName, List<Debuff>>();
 
-    void Start()
+    void Awake()
     {
         speed = startSpeed;
         health = startHealth;
@@ -79,6 +83,10 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(float amount)
     {
         health -= amount;
+        GameObject damageUIGO = (GameObject) Instantiate(damageUIPrefab, transform.position, transform.rotation, transform);
+        LifeDamageUI lifeDamageUI = damageUIGO.GetComponent<LifeDamageUI>();
+        lifeDamageUI.SetDamage(amount);
+        Destroy(damageUIGO, 2f);
 
         if (health <= 0)
         {
