@@ -15,17 +15,21 @@ public abstract class ShootingTurret : BoostableTurret, SlowDamageSpeedTurret
 
     [Header("Setup")]
     public string enemyTag = "EnemyWalker";       // target type
-    public LayerMask enemyMask;
+    //public LayerMask enemyMask;
+    public LayerMask[] listEnemyMask;
     [SerializeField]
     protected Transform partToRotateY = default;          // part of the turret to rotate
     [SerializeField]
     protected Transform partToRotateX = default;          // part of the turret to rotate
     [SerializeField]
     protected Transform firePoint = default;
+    [SerializeField]
+    protected Transform[] listFirePointChecker = default;
 
     // ---- INTERN ----
 
-    protected int enemyLayer; 
+    //protected int enemyLayer;
+    protected int[] listEnemyLayer;
     protected Transform target;
     protected Enemy targetEnemy;
     protected FocusStrategy focusStratey;
@@ -41,7 +45,15 @@ public abstract class ShootingTurret : BoostableTurret, SlowDamageSpeedTurret
     {
         InvokeRepeating("UpdateTarget", 0f, 0.5f);
         focusStratey = new FocusVisibleNearest(this);
-        enemyLayer = Mathf.RoundToInt(Mathf.Log(enemyMask.value, 2));
+        //enemyLayer = Mathf.RoundToInt(Mathf.Log(enemyMask.value, 2));
+
+        listEnemyLayer = new int[listEnemyMask.Length];
+        int i = 0;
+        foreach(LayerMask lm in listEnemyMask)
+        {
+            listEnemyLayer[i] = Mathf.RoundToInt(Mathf.Log(lm.value, 2));
+            ++i;
+        }
     }
 
     protected override void UpdateCall()

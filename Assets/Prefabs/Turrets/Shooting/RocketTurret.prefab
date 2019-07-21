@@ -589,16 +589,18 @@ MonoBehaviour:
   damage: 50
   slowPercent: 0
   enemyTag: EnemyWalker
-  enemyMask:
-    serializedVersion: 2
+  listEnemyMask:
+  - serializedVersion: 2
     m_Bits: 256
+  - serializedVersion: 2
+    m_Bits: 8192
   partToRotateY: {fileID: 7583905254472956746}
   partToRotateX: {fileID: 2358614659480127591}
   firePoint: {fileID: 7412735034123593475}
   fireRate: 0.15
   bulletPrefab: {fileID: 6343989327496380177, guid: ec408adb9b81a5741a4517644c9df24b,
     type: 3}
-  impulseForce: 15
+  impulseForce: 10
 --- !u!82 &6616485928740801948
 AudioSource:
   m_ObjectHideFlags: 0

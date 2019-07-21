@@ -10867,9 +10867,11 @@ MonoBehaviour:
   damage: 25
   slowPercent: 30
   enemyTag: EnemyWalker
-  enemyMask:
-    serializedVersion: 2
+  listEnemyMask:
+  - serializedVersion: 2
     m_Bits: 256
+  - serializedVersion: 2
+    m_Bits: 8192
   partToRotateY: {fileID: 8635751097259788870}
   partToRotateX: {fileID: 3674227481288423249}
   firePoint: {fileID: 8662809426455926287}

@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public abstract class Projectile : MonoBehaviour
 {
     public int Damage { get { return damage; } }
+    public float Speed { get { return speed; } }
 
     [SerializeField]
     protected float speed = 70f;
@@ -49,6 +51,7 @@ public abstract class Projectile : MonoBehaviour
         this.damage = damage;
     }
 
+    // if other == null, try to explode
     protected void HitTarget(Transform other)
     {
         if (impactEffect != null)       // todo RemoveAtEnd
@@ -63,7 +66,7 @@ public abstract class Projectile : MonoBehaviour
         }
         else
         {
-            if(other.GetComponent<Enemy>() != null)
+            if(other != null && other.GetComponent<Enemy>() != null)
                 MakeDamage(other);
         }
 
@@ -108,10 +111,21 @@ public abstract class Projectile : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, explosionRadius);
     }
 
-    void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        ActOnTriggerEnter(other);
+        ActOnCollisionEnter(collision);
     }
 
-    protected abstract void ActOnTriggerEnter(Collider other);
+    //void OnTriggerEnter(Collider other)
+    //{
+    //    ActOnCollisionEnter(other);
+    //}
+
+    protected abstract void ActOnCollisionEnter(Collision other);
+
+    public void Impulse(float force)
+    {
+        rb = GetComponent<Rigidbody>();
+        rb.AddForce(transform.forward * force, ForceMode.Impulse);
+    }
 }

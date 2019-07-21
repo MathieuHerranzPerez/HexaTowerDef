@@ -12,17 +12,20 @@ public class FocusVisibleNearest : FocusStrategy
         GameObject enemyToFocus = null;
         float shortestDistance = Mathf.Infinity;
 
-        Collider[] colliders = Physics.OverlapSphere(turret.transform.position, turret.stats.range, turret.enemyMask);
-        foreach (Collider collider in colliders)
+        foreach (int mask in turret.listEnemyMask)
         {
-            if (collider.gameObject.tag == turret.enemyTag)
+            Collider[] colliders = Physics.OverlapSphere(turret.transform.position, turret.stats.range, mask);
+            foreach (Collider collider in colliders)
             {
-                // get ditance between the enemy and this
-                float distanceToEnemy = Vector3.Distance(turret.transform.position, collider.transform.position);
-                if (distanceToEnemy < shortestDistance)
+                if (collider.gameObject.tag == turret.enemyTag)
                 {
-                    shortestDistance = distanceToEnemy;
-                    enemyToFocus = collider.gameObject;
+                    // get ditance between the enemy and this
+                    float distanceToEnemy = Vector3.Distance(turret.transform.position, collider.transform.position);
+                    if (distanceToEnemy < shortestDistance)
+                    {
+                        shortestDistance = distanceToEnemy;
+                        enemyToFocus = collider.gameObject;
+                    }
                 }
             }
         }

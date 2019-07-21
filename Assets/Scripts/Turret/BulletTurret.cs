@@ -46,6 +46,7 @@ public abstract class BulletTurret : ShootingTurret
         audioSource.PlayOneShot(fireSound, volumeFire);     // play the sound
         GameObject bulletGameObject = (GameObject)Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Projectile bullet = bulletGameObject.GetComponent<Projectile>();
+        bullet.Impulse(bullet.Speed);
         Destroy(bulletGameObject, 5f);
 
         lastBulletFired = bullet;

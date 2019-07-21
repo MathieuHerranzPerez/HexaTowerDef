@@ -44,6 +44,12 @@ public class MapBuilder : EditorWindow
             }
             listPrefabTileContent[i] = (GameObject)EditorGUILayout.ObjectField("", listPrefabTileContent[i], typeof(GameObject), false);
         }
+
+        EditorGUILayout.Space();
+        if (GUILayout.Button("Stop editing"))
+        {
+            objectToBuild = null;
+        }
     }
 
     void SceneGUI(SceneView sceneView)
@@ -96,7 +102,7 @@ public class MapBuilder : EditorWindow
         SceneView.duringSceneGui += SceneGUI;
     }
 
-    private void OnDisable()
+    void OnDisable()
     {
         SceneView.duringSceneGui -= SceneGUI;
     }

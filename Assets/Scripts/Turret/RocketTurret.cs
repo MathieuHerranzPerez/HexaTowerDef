@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class RocketTurret : BulletTurret
 {
@@ -16,9 +14,10 @@ public class RocketTurret : BulletTurret
     {
         base.Shoot();
 
-        if(lastBulletFired != null && lastBulletFired is GuidedMissile)
+        if (lastBulletFired != null && lastBulletFired is GuidedMissile)
         {
             GuidedMissile missile = (GuidedMissile)lastBulletFired;
+            missile.ResetVelocity();
             missile.Impulse(impulseForce);
         }
     }

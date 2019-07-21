@@ -28,21 +28,24 @@ public class FocusSmallest : FocusStrategy
         {
             hpMin = Mathf.Infinity;
         }
-        
-        Collider[] colliders = Physics.OverlapSphere(turret.transform.position, turret.stats.range, turret.enemyMask);
-        foreach (Collider collider in colliders)
-        {
-            if (collider.gameObject.tag == turret.enemyTag)
-            {
-                Enemy enemy = collider.gameObject.GetComponent<Enemy>();
-                if (enemy != null)
-                {
-                    if (enemy.startHealth < hpMin)
-                    {
-                        enemyToFocus = collider.gameObject;
-                        hpMin = enemy.startHealth;
 
-                        lastTarget = enemy;
+        foreach (int mask in turret.listEnemyMask)
+        {
+            Collider[] colliders = Physics.OverlapSphere(turret.transform.position, turret.stats.range, mask);
+            foreach (Collider collider in colliders)
+            {
+                if (collider.gameObject.tag == turret.enemyTag)
+                {
+                    Enemy enemy = collider.gameObject.GetComponent<Enemy>();
+                    if (enemy != null)
+                    {
+                        if (enemy.startHealth < hpMin)
+                        {
+                            enemyToFocus = collider.gameObject;
+                            hpMin = enemy.startHealth;
+
+                            lastTarget = enemy;
+                        }
                     }
                 }
             }

@@ -22,15 +22,18 @@ public class LaserTurret : ShootingTurret
             // check if there is no obstacle between the fire point and the target
             if (Physics.Raycast(firePoint.position, firePoint.TransformDirection(Vector3.forward), out hit, stats.range))
             {
-                if (hit.collider.gameObject.layer == enemyLayer)
+                foreach (LayerMask enemyLayer in listEnemyLayer)
                 {
-                    targetEnemy = hit.collider.gameObject.GetComponent<Enemy>();
-                    if(targetEnemy != null)
-                        Laser();
-                }
-                else
-                {
-                    StopLaser();
+                    if (hit.collider.gameObject.layer == enemyLayer)
+                    {
+                        targetEnemy = hit.collider.gameObject.GetComponent<Enemy>();
+                        if (targetEnemy != null)
+                            Laser();
+                    }
+                    else
+                    {
+                        StopLaser();
+                    }
                 }
             }
             else

@@ -1,15 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BulletClassic : Projectile
 {
-    protected override void ActOnTriggerEnter(Collider other)
+    protected override void ActOnCollisionEnter(Collision other)
     {
         if(other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            Enemy currentEnemy = other.GetComponent<Enemy>();
-            if (currentEnemy != null)
+            Enemy currentEnemy = other.gameObject.GetComponent<Enemy>();
+            if (currentEnemy != null) 
             {
                 HitTarget(other.transform);
             }
@@ -18,10 +16,15 @@ public class BulletClassic : Projectile
                 Destroy(gameObject);
             }
         }
+        else if (explosionRadius > 0f && other.gameObject.layer != LayerMask.NameToLayer("Shield"))
+        {
+            HitTarget(null);
+        }
     }
 
     protected override void UpdateCall()
     {
+        /*
         if (target == null)
         {
             Destroy(gameObject);
@@ -44,5 +47,6 @@ public class BulletClassic : Projectile
         }
         // follow the gravity
         //transform.LookAt(transform.position + rb.velocity);
+        */
     }
 }

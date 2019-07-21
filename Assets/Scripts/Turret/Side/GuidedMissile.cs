@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
 public class GuidedMissile : Projectile
 {
     [SerializeField]
@@ -77,13 +75,12 @@ public class GuidedMissile : Projectile
         }
     }
 
-    public void Impulse(float force)
+    public void ResetVelocity()
     {
-        rb = GetComponent<Rigidbody>();
-        rb.AddForce(transform.forward * force, ForceMode.Impulse);
+        rb.velocity = Vector3.zero;
     }
 
-    protected override void ActOnTriggerEnter(Collider other)
+    protected override void ActOnCollisionEnter(Collision other)
     {
         HitTarget(target);
     }

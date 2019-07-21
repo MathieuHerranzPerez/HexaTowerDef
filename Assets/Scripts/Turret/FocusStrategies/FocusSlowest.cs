@@ -29,20 +29,23 @@ public class FocusSlowest : FocusStrategy
             speed = Mathf.Infinity;
         }
 
-        Collider[] colliders = Physics.OverlapSphere(turret.transform.position, turret.stats.range, turret.enemyMask);
-        foreach (Collider collider in colliders)
+        foreach (int mask in turret.listEnemyMask)
         {
-            if (collider.gameObject.tag == turret.enemyTag)
+            Collider[] colliders = Physics.OverlapSphere(turret.transform.position, turret.stats.range, mask);
+            foreach (Collider collider in colliders)
             {
-                Enemy enemy = collider.gameObject.GetComponent<Enemy>();
-                if (enemy != null)
+                if (collider.gameObject.tag == turret.enemyTag)
                 {
-                    if (enemy.startSpeed < speed)
+                    Enemy enemy = collider.gameObject.GetComponent<Enemy>();
+                    if (enemy != null)
                     {
-                        enemyToFocus = collider.gameObject;
-                        speed = enemy.startSpeed;
+                        if (enemy.startSpeed < speed)
+                        {
+                            enemyToFocus = collider.gameObject;
+                            speed = enemy.startSpeed;
 
-                        lastTarget = enemy;
+                            lastTarget = enemy;
+                        }
                     }
                 }
             }

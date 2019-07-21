@@ -29,20 +29,23 @@ public class FocusBiggest : FocusStrategy
             hpMax = 0f;
         }
 
-        Collider[] colliders = Physics.OverlapSphere(turret.transform.position, turret.stats.range, turret.enemyMask);
-        foreach (Collider collider in colliders)
+        foreach (int mask in turret.listEnemyMask)
         {
-            if (collider.gameObject.tag == turret.enemyTag)
+            Collider[] colliders = Physics.OverlapSphere(turret.transform.position, turret.stats.range, mask);
+            foreach (Collider collider in colliders)
             {
-                Enemy enemy = collider.gameObject.GetComponent<Enemy>();
-                if(enemy != null)
+                if (collider.gameObject.tag == turret.enemyTag)
                 {
-                    if (enemy.startHealth > hpMax)
+                    Enemy enemy = collider.gameObject.GetComponent<Enemy>();
+                    if (enemy != null)
                     {
-                        enemyToFocus = collider.gameObject;
-                        hpMax = enemy.startHealth;
+                        if (enemy.startHealth > hpMax)
+                        {
+                            enemyToFocus = collider.gameObject;
+                            hpMax = enemy.startHealth;
 
-                        lastTarget = enemy;
+                            lastTarget = enemy;
+                        }
                     }
                 }
             }
